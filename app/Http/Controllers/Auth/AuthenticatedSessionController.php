@@ -32,19 +32,21 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-
-        $request->validate([
-            'g-recaptcha-response' => ['required', new Recaptcha()],
-        ]);
-        
-        $user = User::where('email',$request->email)->first();
-        
-        if ($user) {
-            $request->merge([
-                'password' => $user->salt.$request->password,
+        // Перевірка на локальне середовище
+        if (!app()->environment('local')) {
+            $request->validate([
+                'g-recaptcha-response' => ['required', new Recaptcha()],
             ]);
         }
-        
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user) {
+            $request->merge([
+                'password' => $user->salt . $request->password,
+            ]);
+        }
+
         $request->authenticate();
 
         $request->session()->regenerate();

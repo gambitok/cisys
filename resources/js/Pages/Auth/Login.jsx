@@ -6,10 +6,8 @@ import Input from '@/Components/Input';
 import Label from '@/Components/Label';
 import ValidationErrors from '@/Components/ValidationErrors';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
-
-import ReCAPTCHA from "react-google-recaptcha"; 
+import ReCAPTCHA from "react-google-recaptcha";
 import config from '../../config';
-
 
 export default function Login(props) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -18,6 +16,7 @@ export default function Login(props) {
         remember: '',
         'g-recaptcha-response': '',
     });
+
     useEffect(() => {
         return () => {
             reset('password');
@@ -31,9 +30,10 @@ export default function Login(props) {
     const captcha = useRef(null);
 
     const submit = (e) => {
-        captcha.current.reset();
+        if (captcha.current) {
+            captcha.current.reset();
+        }
         e.preventDefault();
-
         post(route('login'));
     };
 
@@ -42,11 +42,12 @@ export default function Login(props) {
             ...data,
             'g-recaptcha-response': value,
         });
-    }
+    };
+
+    const isLocal = process.env.NODE_ENV === 'development';
 
     return (
         <Guest siteLogo={props.general_settings.site_icon}>
-
             <Head title="LOG IN" />
 
             {props.status && <div className="mb-4 font-medium text-sm text-green-600">{props.status}</div>}
@@ -54,7 +55,6 @@ export default function Login(props) {
             <ValidationErrors errors={errors} />
 
             <form onSubmit={submit}>
-
                 <a href={route('authlogin')} className="underline text-sm text-gray-600 hover:text-gray-900">
                     <img src='/social-login-google.png' style={{width: '50%',margin: '10px auto'}} />
                 </a>
@@ -63,7 +63,6 @@ export default function Login(props) {
 
                 <div style={{marginTop: "15px"}}>
                     <Label forInput="email" value="Email" />
-
                     <Input
                         type="text"
                         name="email"
@@ -77,7 +76,6 @@ export default function Login(props) {
 
                 <div className="mt-4">
                     <Label forInput="password" value="Password" />
-
                     <Input
                         type="password"
                         name="password"
@@ -89,11 +87,9 @@ export default function Login(props) {
                 </div>
 
                 <div className="flex items-center justify-center mt-4">
-
                     <div className="block">
                         <label className="flex items-center">
                             <Checkbox name="remember" value={data.remember} handleChange={onHandleChange} />
-
                             <span className="ml-2 text-sm text-gray-600">Remember me</span>
                         </label>
                     </div>
@@ -106,23 +102,22 @@ export default function Login(props) {
                             Forgot your password?
                         </Link>
                     )}
-
                 </div>
 
-                <div className='mt-3' style={{textAlign: "-webkit-center"}}>
-                    <ReCAPTCHA
-                        sitekey={config.RECAPTCHA_SITEKEY}
-                        ref={captcha}
-                        onChange={onChangeRecaptcha}
-                    />
-                </div>
-                
+                {!isLocal && (
+                    <div className='mt-3' style={{textAlign: "-webkit-center"}}>
+                        <ReCAPTCHA
+                            sitekey={config.RECAPTCHA_SITEKEY}
+                            ref={captcha}
+                            onChange={onChangeRecaptcha}
+                        />
+                    </div>
+                )}
+
                 <div className="flex items-center justify-center mt-3 mb-3">
-
                     <Button className="mx-4 bg-success" processing={processing} >
                         Sign in
                     </Button>
-
                     <Link
                         href={route('register')}
                         className={'inline-flex items-center px-4 py-2 bg-gray-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest active:bg-gray-900 transition ease-in-out duration-150 false'}
@@ -130,13 +125,7 @@ export default function Login(props) {
                     >
                         Sign up
                     </Link>
-
                 </div>
-
-                
-
-                
-
             </form>
         </Guest>
     );

@@ -2,7 +2,7 @@ import React from 'react';
 import { Inertia } from "@inertiajs/inertia";
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import moment from 'moment';
-import { isEmpty } from 'lodash';
+// import { isEmpty } from 'lodash';
 
 const Common = () => {
     const makeUrlWithSearchAndOrder = (route,search,o,ob,ldap=false) => {
@@ -12,7 +12,7 @@ const Common = () => {
             return changeUrlWithSearchAndOrder(route+'?s='+search+'&ob='+ob+'&o='+o);
         }
     }
-    const changeUrlWithSearchAndOrder = (url) => { 
+    const changeUrlWithSearchAndOrder = (url) => {
         Inertia.visit(url);
     }
     const makeSortOrderLink = (linktext,route,columnname,search,o,ob,ldap=false) => {
@@ -32,13 +32,13 @@ const Common = () => {
             formattedDate = moment(inputDate).format(general_settings.format_date);
 
         }
-        
-        
-          
+
+
+
         return formattedDate;
     }
 
-    
+
     return {
         makeUrlWithSearchAndOrder,
         changeUrlWithSearchAndOrder,
@@ -47,4 +47,3 @@ const Common = () => {
     }
   }
   export default Common();
-  

@@ -17,10 +17,3 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-# Ignore Composer and npm lock files
-composer.lock
-package-lock.json
-yarn.lock
-# Ignore Docker-related files
-docker/php/local.ini
-docker/nginx/nginx.conf

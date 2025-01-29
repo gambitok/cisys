@@ -3,44 +3,48 @@
  * PayPal Setting & API Credentials
  * Created by Raza Mehdi <srmk@outlook.com>.
  */
-    $test_client_id = '';
-    $test_client_secret = '';
-    $live_client_id = '';
-    $live_client_secret = '';
+//    $test_client_id = '';
+//    $test_client_secret = '';
+//    $live_client_id = '';
+//    $live_client_secret = '';
+//
+//    $link  = mysqli_connect(env('DB_HOST'),env('DB_USERNAME'),env('DB_PASSWORD'),env('DB_DATABASE'));
+//    $q = "SELECT value FROM `general_settings` WHERE `key` = 'paypal_env'";
+//    $res = mysqli_query($link,$q);
+//    $result = mysqli_fetch_array($res);
+//
+//    if($result['value'] == '1'){
+//        $qa = "SELECT value FROM `general_settings` WHERE `key` = 'test_publickey_paypal'";
+//        $ress = mysqli_query($link,$qa);
+//        $row = mysqli_fetch_array($ress);
+//
+//        $test_client_id = $row['value'];
+//
+//
+//        $qaa = "SELECT value FROM `general_settings` WHERE `key` = 'test_secretkey_paypal'";
+//        $resss = mysqli_query($link,$qaa);
+//        $roww = mysqli_fetch_array($resss);
+//
+//        $test_client_secret = $roww['value'];
+//    }else{
+//        $qa = "SELECT value FROM `general_settings` WHERE `key` = 'live_publickey_paypal'";
+//        $ress = mysqli_query($link,$qa);
+//        $row = mysqli_fetch_array($ress);
+//
+//        $live_client_id = $row['value'];
+//
+//
+//        $qaa = "SELECT value FROM `general_settings` WHERE `key` = 'live_secretkey_paypal'";
+//        $resss = mysqli_query($link,$qaa);
+//        $roww = mysqli_fetch_array($resss);
+//
+//        $live_client_secret = $roww['value'];
+//    }
 
-    $link  = mysqli_connect(env('DB_HOST'),env('DB_USERNAME'),env('DB_PASSWORD'),env('DB_DATABASE'));
-    $q = "SELECT value FROM `general_settings` WHERE `key` = 'paypal_env'";
-    $res = mysqli_query($link,$q);
-    $result = mysqli_fetch_array($res);
-
-    if($result['value'] == '1'){
-        $qa = "SELECT value FROM `general_settings` WHERE `key` = 'test_publickey_paypal'";
-        $ress = mysqli_query($link,$qa);
-        $row = mysqli_fetch_array($ress);
-
-        $test_client_id = $row['value'];
-
-
-        $qaa = "SELECT value FROM `general_settings` WHERE `key` = 'test_secretkey_paypal'";
-        $resss = mysqli_query($link,$qaa);
-        $roww = mysqli_fetch_array($resss);
-
-        $test_client_secret = $roww['value'];
-    }else{
-        $qa = "SELECT value FROM `general_settings` WHERE `key` = 'live_publickey_paypal'";
-        $ress = mysqli_query($link,$qa);
-        $row = mysqli_fetch_array($ress);
-
-        $live_client_id = $row['value'];
-
-
-        $qaa = "SELECT value FROM `general_settings` WHERE `key` = 'live_secretkey_paypal'";
-        $resss = mysqli_query($link,$qaa);
-        $roww = mysqli_fetch_array($resss);
-
-        $live_client_secret = $roww['value'];
-    }
-
+    $test_client_id = ENV('PAYPAL_SANDBOX_CLIENT_ID');
+    $test_client_secret = ENV('PAYPAL_SANDBOX_CLIENT_SECRET');
+    $live_client_id = ENV('PAYPAL_SANDBOX_CLIENT_ID');
+    $live_client_secret = ENV('PAYPAL_SANDBOX_CLIENT_SECRET');
 
 return [
     'mode'    => env('PAYPAL_MODE', 'sandbox'), // Can only be 'sandbox' Or 'live'. If empty or invalid, 'live' will be used.
