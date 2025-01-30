@@ -41,10 +41,10 @@
 //        $live_client_secret = $roww['value'];
 //    }
 
-    $test_client_id = ENV('PAYPAL_SANDBOX_CLIENT_ID');
-    $test_client_secret = ENV('PAYPAL_SANDBOX_CLIENT_SECRET');
-    $live_client_id = ENV('PAYPAL_SANDBOX_CLIENT_ID');
-    $live_client_secret = ENV('PAYPAL_SANDBOX_CLIENT_SECRET');
+$test_client_id = ENV('PAYPAL_SANDBOX_CLIENT_ID');
+$test_client_secret = ENV('PAYPAL_SANDBOX_CLIENT_SECRET');
+$live_client_id = ENV('PAYPAL_SANDBOX_CLIENT_ID');
+$live_client_secret = ENV('PAYPAL_SANDBOX_CLIENT_SECRET');
 
 return [
     'mode'    => env('PAYPAL_MODE', 'sandbox'), // Can only be 'sandbox' Or 'live'. If empty or invalid, 'live' will be used.

@@ -5,8 +5,8 @@ import topLevelAwait from "vite-plugin-top-level-await";
 
 export default defineConfig({
     server: {
-        host: '127.0.0.1', // Використовуйте '127.0.0.1' для локальної розробки
-        port: 5173, // Додайте порт, якщо потрібно
+        host: '127.0.0.1',
+        port: 5173,
     },
     plugins: [
         topLevelAwait({

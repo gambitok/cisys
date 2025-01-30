@@ -32,7 +32,6 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        // Перевірка на локальне середовище
         if (!app()->environment('local')) {
             $request->validate([
                 'g-recaptcha-response' => ['required', new Recaptcha()],
