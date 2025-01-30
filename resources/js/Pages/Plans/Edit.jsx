@@ -4,7 +4,7 @@ import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import Form from '@/Pages/Plans/Form';
 
 export default function Index(props) {
-    
+
     const { data, setData, errors, put } = useForm({
         product_id: props.plan.product_id || "",
         role_id: props.plan.role_id || "",
@@ -13,7 +13,7 @@ export default function Index(props) {
         qty: props.plan.qty || "",
         price: props.plan.price || "",
         standalone: props.plan.standalone || "",
-
+        standalone_status: props.plan.standalone_status !== undefined ? props.plan.standalone_status : 0,
     });
 
     function handleSubmit(e) {
@@ -29,17 +29,9 @@ export default function Index(props) {
             header={'Edit package'}
             headtitle={'Edit package'}
         >
-            
-            
-            
             <form name="createForm" onSubmit={handleSubmit}>
-                
                 <Form data={data} errors={errors} setData={setData} types={props.types} products={props.products} coupons={props.coupons} />
-
             </form>
-
-                       
-            
         </Authenticated>
     );
 }

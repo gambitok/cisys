@@ -21,70 +21,85 @@ class ClientController extends Controller{
      *
      * @return Response
      */
-    public function index(Request $request){
-        
-        $s = '';
-        $o = 'DESC';
-        $ob = 'id';
+    public function index(Request $request)
+    {
+        $search = '';
+        $order = 'DESC';
+        $orderBy = 'id';
 
-        $clients = Client::with(['user','group']);
-        
+        $clients = Client::with(['user', 'group']);
+
         if (isset($request->s)) {
-            $s = $request->s;
+            $search = $request->s;
 
-            $clients = $clients->orWhere('client_id','LIKE','%'.$request->s.'%')->orWhere('server_id','LIKE','%'.$request->s.'%')->orWhere('name','LIKE','%'.$request->s.'%')->orWhere('ipaddress','LIKE','%'.$request->s.'%')->orWhere('os_version','LIKE','%'.$request->s.'%');
-
-            $clients = $clients->orWhereHas('user', function($query) use ($s) {
-                return $query->where('username','LIKE','%'.$s.'%'); 
-            });
-
-            $clients = $clients->orWhereHas('group', function($query) use ($s) {
-                return $query->where('name','LIKE','%'.$s.'%'); 
-            });
-
-
+            $clients = $clients
+                ->orWhere('client_id', 'LIKE', '%' . $request->s . '%')
+                ->orWhere('server_id', 'LIKE', '%' . $request->s . '%')
+                ->orWhere('name', 'LIKE', '%' . $request->s . '%')
+                ->orWhere('ipaddress', 'LIKE', '%' . $request->s . '%')
+                ->orWhere('os_version', 'LIKE', '%' . $request->s . '%')
+                ->orWhereHas('user', function ($query) use ($search) {
+                    return $query->where('username', 'LIKE', '%' . $search . '%');
+                })
+                ->orWhereHas('group', function ($query) use ($search) {
+                    return $query->where('name', 'LIKE', '%' . $search . '%');
+                });
         }
 
         if (isset($request->o)) {
-            $ob = $request->ob;
-            $o = $request->o;
+            $orderBy = $request->ob;
+            $order = $request->o;
         }
 
-        if ($ob == 'username') {
-            $clients = $clients->orderBy(User::select($ob)->whereColumn('clients.user_id', 'users.id'),$o);
-        }else if($ob == 'group'){
-            $clients = $clients->orderBy(Group::select('name')->whereColumn('clients.group_id', 'groups.id'),$o);
-        }else if($ob == 'setting'){
-            $clients = $clients->orderBy(Group::select('settings.name')->join('settings', 'settings.id', '=', 'groups.setting_id')->whereColumn('clients.group_id', 'groups.id'),$o);
-        }else{
-            $clients = $clients->orderBy($ob, $o);
+        switch ($orderBy) {
+            case 'username':
+                $clients = $clients->orderBy(User::select($orderBy)->whereColumn('clients.user_id', 'users.id'), $order);
+                break;
+            case 'group':
+                $clients = $clients->orderBy(Group::select('name')->whereColumn('clients.group_id', 'groups.id'), $order);
+                break;
+            case 'setting':
+                $clients = $clients->orderBy(
+                    Group::select('settings.name')
+                        ->join('settings', 'settings.id', '=', 'groups.setting_id')
+                        ->whereColumn('clients.group_id', 'groups.id'),
+                    $order
+                );
+                break;
+            default:
+                $clients = $clients->orderBy($orderBy, $order);
+                break;
         }
 
-        
-        
         $clients = $clients->paginate(env('PAGINATE_NO_OF_ROWS'));
-        
+
         $clients->appends($request->except(['page']));
 
-
-        $group = Group::all();
-        $groups = [];
-        foreach ($group as $value) {
-            $groups[] = [
-                'value' => $value->id,
-                'label' => $value->name,
+        $groups = Group::all()->map(function ($group) {
+            return [
+                'value' => $group->id,
+                'label' => $group->name,
             ];
-        }
+        })->values();
 
-
-        return Inertia::render('Clients/Index', ['clients' => $clients,'groups'=>$groups,'s' => $s,'o' => $o,'ob' => $ob,'firstitem' => $clients->firstItem()]);
+        return Inertia::render(
+            'Clients/Index',
+            [
+                'clients' => $clients,
+                'groups' => $groups,
+                's' => $search,
+                'o' => $order,
+                'ob' => $orderBy,
+                'firstitem' => $clients->firstItem(),
+            ]
+        );
     }
-    
+
     public function clientGroupsBind(Request $request) {
         $this->validate($request, [
             'group_id'    => 'required'
         ]);
-        
+
         Client::whereIn('id',$request->clients)->update(['group_id'=>$request->group_id]);
 
         return redirect()->back()->with('success', 'Data updated successfully!');

@@ -1,41 +1,30 @@
-import React, { useState } from 'react';
+import React from 'react';
 import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
 import InputError from '@/Components/InputError';
-import Checkbox from '@/Components/Checkbox';
+import Checkbox from '@/Components/CustomCheckbox';
 import Select from 'react-select';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 
+export default function Form({ data, errors, setData, types, products, coupons }) {
+    const optionChanged = value => setData("role_id", value.value);
+    const typeval = types.find(obj => obj.value === data.role_id);
 
-export default function Form({ data,errors,setData,types,products,coupons }) {
-    
-    const optionChanged = value => {
-        setData("role_id",value.value);
+    const optionChangedCoupon = value => setData("coupon_id", value.value);
+    const couponval = coupons.find(obj => obj.value === data.coupon_id);
+
+    const optionChangedProduct = value => setData("product_id", value.value);
+    const productval = products.find(obj => obj.value === data.product_id);
+
+    const handleCheckboxChange = (e) => {
+        const isChecked = e.target.checked ? 1 : 0;
+        setData("standalone_status", isChecked);
+        console.log("Checkbox standalone_status value:", isChecked);
     };
-    const typeval = types.find(obj => {
-        return obj.value === data.role_id;
-    });
 
-    const optionChangedCoupon = value => {
-        setData("coupon_id",value.value);
-    };
-
-    const couponval = coupons.find(obj => {
-        return obj.value === data.coupon_id;
-    });
-
-    const optionChangedProduct = value => {
-        setData("product_id",value.value);
-    };
-    const productval = products.find(obj => {
-        return obj.value === data.product_id;
-    });
-    
     return (
-       <div>
-
+        <div>
             <div className='row g-3 my-2'>
-
                 <div className='col-md-6'>
                     <div className="mb-3">
                         <InputLabel value="Product" />
@@ -46,7 +35,7 @@ export default function Form({ data,errors,setData,types,products,coupons }) {
                             name="product_id"
                             options={products}
                             onChange={optionChangedProduct}
-                            styles={{option: (styles, state) => ({...styles,cursor: 'pointer',}),control: (styles) => ({...styles,cursor: 'pointer',}),}}
+                            styles={{ option: (styles, state) => ({ ...styles, cursor: 'pointer' }), control: (styles) => ({ ...styles, cursor: 'pointer' }) }}
                         />
                         <InputError message={errors.product_id} className="mt-2" />
                     </div>
@@ -66,11 +55,7 @@ export default function Form({ data,errors,setData,types,products,coupons }) {
                         <InputError message={errors.name} className="mt-2" />
                     </div>
                 </div>
-
-              
             </div>
-
-
             <div className='row g-3 my-2'>
                 <div className='col-md-6'>
                     <div className="mb-3">
@@ -87,7 +72,6 @@ export default function Form({ data,errors,setData,types,products,coupons }) {
                         <InputError message={errors.qty} className="mt-2" />
                     </div>
                 </div>
-
                 <div className='col-md-6'>
                     <div className="mb-3">
                         <InputLabel htmlFor="price" value="Price" />
@@ -103,15 +87,11 @@ export default function Form({ data,errors,setData,types,products,coupons }) {
                         <InputError message={errors.price} className="mt-2" />
                     </div>
                 </div>
-
             </div>
-
-           
             <div className='row g-3 my-2'>
                 <div className='col-md-6'>
                     <div className="mb-3">
-                        <InputLabel htmlFor="coupon_code" value="Coupon Code" /* style={{width: "90%",display: "inline-block"}} */ />
-                        {/* <span style={{float: "right",cursor: "pointer",width: "auto",display: "inline-block",color: "#6967d7"}} onClick={clearCouponCode}>Clear</span> */}
+                        <InputLabel htmlFor="coupon_code" value="Coupon Code" />
                         <Select
                             className="basic-single"
                             classNamePrefix="select"
@@ -119,19 +99,16 @@ export default function Form({ data,errors,setData,types,products,coupons }) {
                             name="coupon_id"
                             options={coupons}
                             onChange={optionChangedCoupon}
-                            styles={{option: (styles, state) => ({...styles,cursor: 'pointer',}),control: (styles) => ({...styles,cursor: 'pointer',}),}}
+                            styles={{ option: (styles, state) => ({ ...styles, cursor: 'pointer' }), control: (styles) => ({ ...styles, cursor: 'pointer' }) }}
                         />
                         <InputError message={errors.coupon_id} className="mt-2" />
                     </div>
                 </div>
-
                 <div className='col-md-6'>
                     <div className="mb-3">
-                        <label htmlFor="rate" className={`block font-medium text-sm text-gray-700 `}>
-                        Standalone Surcharge {/* <small style={{fontSize: "10px"}}>(Percentage)</small> */}
-                        </label>
+                        <InputLabel value="Standalone Surcharge" />
                         <TextInput
-                            id="rate"
+                            id="standalone"
                             value={data.standalone}
                             onChange={(e) => setData('standalone', e.target.value)}
                             type="number"
@@ -142,8 +119,6 @@ export default function Form({ data,errors,setData,types,products,coupons }) {
                         <InputError message={errors.standalone} className="mt-2" />
                     </div>
                 </div>
-
-                
             </div>
             <div className='row g-3 my-2'>
                 <div className='col-md-6'>
@@ -161,13 +136,18 @@ export default function Form({ data,errors,setData,types,products,coupons }) {
                         <InputError message={errors.role_id} className="mt-2" />
                     </div>
                 </div>
+                <div className='col-md-6'>
+                    <div className="mb-3">
+                        <InputLabel value="Standalone Status" />
+                        <Checkbox
+                            name="standalone_status"
+                            checked={data.standalone_status === 1}
+                            onChange={handleCheckboxChange}
+                        />
+                        <InputError message={errors.standalone_status} className="mt-2" />
+                    </div>
+                </div>
             </div>
-
-
-
-            
-
-            
             <div className="mt-4 formsubmitbutton">
                 <button
                     type="submit"
@@ -182,7 +162,6 @@ export default function Form({ data,errors,setData,types,products,coupons }) {
                     Back
                 </Link>
             </div>
-        
-       </div>
+        </div>
     );
 }
