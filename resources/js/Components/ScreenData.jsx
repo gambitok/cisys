@@ -4,9 +4,9 @@ import Checkbox from '@/Components/Checkbox';
 import InputError from '@/Components/InputError';
 
 export default function ScreenData({ data,errors,setData }) {
-    
+
     const information_display = ['IP address', 'User Name', 'Computer Name', 'OS Info', 'Device ID', 'Group'];
-    
+
     const handleChange = (e) => {
         let id = e.target.value;
         let name = e.target.name;
@@ -19,13 +19,9 @@ export default function ScreenData({ data,errors,setData }) {
                 return item !== id;
             })
         );
-        
     };
 
-    
-
     function defaultDataDefine(screenid){
-        
         const newData = { ...data };
         if (newData['banner_height_'+screenid] === undefined) {
             newData['banner_height_'+screenid] = 20;
@@ -41,7 +37,6 @@ export default function ScreenData({ data,errors,setData }) {
             newData['alarm_message_'+screenid] = '';
             setData(newData);
         }
-
     }
 
     function checkboxvaluechecked(name,permission_id) {
@@ -53,8 +48,8 @@ export default function ScreenData({ data,errors,setData }) {
 
     return (
         <>
-            
-            {Array.from( 
+
+            {Array.from(
                 Array(data.screen), (v,i) =>
                 <div id={'screenFrom-'+(i+1)} style={{display: data.screenselect==i+1 ? "":"none"}}>
                     {defaultDataDefine(i+1)}
@@ -109,7 +104,7 @@ export default function ScreenData({ data,errors,setData }) {
                                         />
 
                                         <InputError message={errors['banner_border_'+(i+1)]} className="mt-2" />
-                                        
+
                                     </div>
                                 </div>
 
@@ -127,7 +122,7 @@ export default function ScreenData({ data,errors,setData }) {
                                         />
 
                                         <InputError message={errors['banner_color_'+(i+1)]} className="mt-2" />
-                                        
+
                                     </div>
                                 </div>
 
@@ -147,7 +142,7 @@ export default function ScreenData({ data,errors,setData }) {
                                             autoComplete="current-center_text"
                                             placeholder="Center Text"
                                         />
-                                        
+
                                         <InputError message={errors['center_text_'+(i+1)]} className="mt-2" />
 
                                     </div>
@@ -166,7 +161,7 @@ export default function ScreenData({ data,errors,setData }) {
                                             placeholder="Right text"
                                         />
                                         <InputError message={errors['right_text_'+(i+1)]} className="mt-2" />
-                                        
+
                                     </div>
                                 </div>
 
@@ -183,12 +178,11 @@ export default function ScreenData({ data,errors,setData }) {
                                             placeholder="Text Color"
                                         />
                                         <InputError message={errors['text_color_'+(i+1)]} className="mt-2" />
-                                        
+
                                     </div>
                                 </div>
 
                             </div>
-
 
                             <div className='row'>
 
@@ -223,20 +217,18 @@ export default function ScreenData({ data,errors,setData }) {
                                         />
 
                                         <InputError message={errors['hearbeat_'+(i+1)]} className="mt-2" />
-                                        
+
                                     </div>
                                 </div>
 
                             </div>
 
-
                         </div>
 
                         <div className='col-md-6'>
-                        
 
                             <InputLabel value="Computer Information Display" />
-                            
+
                             <div className='row g-3 my-2'>
                                 {information_display.map((item) => (
                                     <div className='col-md-6'>
@@ -251,9 +243,7 @@ export default function ScreenData({ data,errors,setData }) {
                         </div>
                     </div>
 
-
-
-                    <div className='row g-3 my-2' style={{display:"none"}}>
+                    <div className='row g-3 my-2'>
                         <div className='col-md-6'>
                             <div className="mb-3">
                                 <InputLabel htmlFor={'alarm_code_'+(i+1)} value="Alarm code" />
@@ -266,9 +256,9 @@ export default function ScreenData({ data,errors,setData }) {
                                     autoComplete="current-alarm_code"
                                     placeholder="Alarm code"
                                 />
-                                
+
                                 <InputError message={errors['alarm_code_'+(i+1)]} className="mt-2" />
-                                
+
                             </div>
                         </div>
                         <div className='col-md-6'>
@@ -285,15 +275,14 @@ export default function ScreenData({ data,errors,setData }) {
                                 />
 
                                 <InputError message={errors['alarm_message_'+(i+1)]} className="mt-2" />
-                                
+
                             </div>
                         </div>
                     </div>
 
                 </div>
             )}
-            
-            
+
         </>
     );
 }

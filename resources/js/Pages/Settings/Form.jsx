@@ -22,8 +22,7 @@ export default function Form({ data,errors,setData }) {
             })
         );
     }; */
-    
-    
+
     /* function checkboxvaluechecked(permission_id) {
        return (data.info_checks.indexOf(permission_id) > -1);
     } */
@@ -60,15 +59,13 @@ export default function Form({ data,errors,setData }) {
                 html += '<TextInput id="banner_height" onChange={(e) => setData("banner_height", e.target.value)} type="number" className="mt-1 block w-full form-control" autoComplete="current-banner_height" placeholder="Banner Height (px)" />';
             html += '</div>';
         html += '</div>'; */
-        
-        
 
         /* const root = ReactDOM.createRoot(
             document.getElementById('screen-data')
         );
         const element = <h1>Hello, world</h1>;
         root.render(element); */
-            
+
         // $('#screen-data').html('<InputLabel htmlFor="remark" value="Remark" />');
     }
 
@@ -81,7 +78,7 @@ export default function Form({ data,errors,setData }) {
         alert(e.value);
         // this.setState({ id: e.value, name: e.label });
     } */
-    
+
     /* if (data.screen) {
         for (let i = 1; i <= data.screen; i++) {
             const newData = { ...data };
@@ -135,7 +132,6 @@ export default function Form({ data,errors,setData }) {
                 </div>
             </div>
 
-
             <div className='row g-3 my-2' style={{display: "none"}}>
                 <div className='col-md-6'>
                     <div className="mb-3">
@@ -174,7 +170,6 @@ export default function Form({ data,errors,setData }) {
                                     </button>
                             )}
 
-
                             <button className='nav-link' id='nav-tab-plus' data-bs-toggle="tab" type="button" onClick={()=>screenCick(1)}>
                                 <i className="bi bi-plus-lg" style={{fontSize: "25px"}}></i>
                             </button>
@@ -182,7 +177,7 @@ export default function Form({ data,errors,setData }) {
                             <button className='nav-link' id='nav-tab-minus' data-bs-toggle="tab" type="button" onClick={()=>screenCick(0)}>
                                 <i className="bi bi-dash-lg" style={{fontSize: "25px"}}></i>
                             </button>
-                            
+
                         </div>
                     </nav>
                 </div>
@@ -191,12 +186,11 @@ export default function Form({ data,errors,setData }) {
             {/* <hr /> */}
 
             <div id='screen-data'>
-                
+
                 {/* {loadField()} */}
 
                 <ScreenData data={data} errors={errors} setData={setData}  />
 
-                
                 {/* <div className='row g-3 my-2'>
                     <div className='col-md-6'>
 
@@ -214,7 +208,7 @@ export default function Form({ data,errors,setData }) {
                                         autoComplete="current-banner_height"
                                         placeholder="Banner Height (px)"
                                     />
-                                    
+
                                 </div>
                             </div>
 
@@ -307,25 +301,22 @@ export default function Form({ data,errors,setData }) {
                     </div>
 
                     <div className='col-md-6'>
-                    
 
                         <InputLabel value="Computer Information Display" />
-                        
+
                         <div className='row g-3 my-2'>
                             {information_display.map((item) => (
-                                
+
                                 <label className="flex items-center">
                                     <Checkbox name="info_checks[]" value={item} handleChange={handleChange} checked={checkboxvaluechecked(item)} />
                                     <span className="ml-2 text-sm text-gray-600">{item}</span>
                                 </label>
-                                
+
                             ))}
                         </div>
 
                     </div>
                 </div>
-
-
 
                 <div className='row g-3 my-2'>
                     <div className='col-md-6'>
@@ -362,10 +353,8 @@ export default function Form({ data,errors,setData }) {
 
             </div>
 
-
             <hr />
 
-            
             <div className="mt-4 formsubmitbutton">
                 <button
                     type="submit"
@@ -380,10 +369,8 @@ export default function Form({ data,errors,setData }) {
                 >
                     Back
                 </Link>
-                
+
             </div>
-        
-            
 
        </div>
     );
