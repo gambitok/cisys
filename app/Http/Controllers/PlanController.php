@@ -56,7 +56,7 @@ class PlanController extends Controller
 
         if ($ob == 'type') {
             $plans = $plans->orderBy(Role::select('name')->whereColumn('roles.id', 'plans.role_id'),$o);
-        } elseif ($ob == 'product'){
+        } elseif ($ob == 'product') {
             $plans = $plans->orderBy(Product::select('name')->whereColumn('products.id', 'plans.product_id'),$o);
         } else {
             $plans = $plans->orderBy($ob, $o);

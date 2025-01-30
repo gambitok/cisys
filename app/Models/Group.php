@@ -7,14 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Auth;
 
-class Group extends Model{
+class Group extends Model
+{
     use HasFactory;
     use SoftDeletes;
 
-    protected static function boot(){
+    protected static function boot()
+    {
         parent::boot();
         static::addGlobalScope('user', function ($query) {
-            $user = Auth::user();            
+            $user = Auth::user();
             if ($user && $user->role_id > 1) {
                 $query->where('user_id', $user->id);
             }
@@ -28,10 +30,13 @@ class Group extends Model{
      */
     protected $guarded = [];
 
-    public function setting(){
+    public function setting()
+    {
         return $this->belongsTo(Setting::class)->with('screens');
     }
-    public function user() {
+
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }

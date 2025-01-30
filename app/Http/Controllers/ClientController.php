@@ -75,10 +75,10 @@ class ClientController extends Controller{
 
         $clients->appends($request->except(['page']));
 
-        $groups = Group::all()->map(function ($group) {
+        $groups = Group::with('user')->get()->map(function ($group) {
             return [
                 'value' => $group->id,
-                'label' => $group->name,
+                'label' => ($group->user ? "{$group->user->name}" : 'Unknown user') . ': ' . $group->name,
             ];
         })->values();
 

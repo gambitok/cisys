@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
+
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
-    
     /**
      * The attributes that are mass assignable.
      *
@@ -41,7 +41,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
-    public function role() {
+    public function role()
+    {
         return $this->belongsTo(Role::class);
     }
+
 }
