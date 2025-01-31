@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Validator;
 use Arr;
 use Hash;
 
-class ClientController extends Controller{
+class ClientController extends Controller
+{
+
      /**
      * Show the form for creating a new resource.
      *

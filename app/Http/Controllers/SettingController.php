@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,6 +17,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Arr;
 use Hash;
+use Illuminate\Support\Facades\Auth;
 
 class SettingController extends Controller
 {
@@ -24,84 +26,105 @@ class SettingController extends Controller
      *
      * @return Response
      */
-    public function index(Request $request){
-        $s = '';
-        $o = 'DESC';
-        $ob = 'id';
+    public function index(Request $request)
+    {
+        $search = '';
+        $order = 'DESC';
+        $orderBy = 'id';
 
-        $settings = Setting::with(['user','screenFirst']);
-            
+        $settings = Setting::with(['user', 'screenFirst']);
+
         if (isset($request->s)) {
-            $s = $request->s;
+            $search = $request->s;
 
-            // $settings = $settings->orWhere('name','LIKE','%'.$request->s.'%')->orWhere('center_text','LIKE','%'.$request->s.'%')->orWhere('right_text','LIKE','%'.$request->s.'%')->orWhere('remark','LIKE','%'.$request->s.'%');
-            $settings = $settings->orWhere('name','LIKE','%'.$request->s.'%')->orWhere('remark','LIKE','%'.$request->s.'%');
-
-            $settings = $settings->orWhereHas('screenFirst', function($query) use ($s) {
-                return $query->where('center_text','LIKE','%'.$s.'%'); 
-            });
-            
-            $settings = $settings->orWhereHas('screenFirst', function($query) use ($s) {
-                return $query->where('right_text','LIKE','%'.$s.'%'); 
-            });
-
-            $settings = $settings->orWhereHas('user', function($query) use ($s) {
-                return $query->where('username','LIKE','%'.$s.'%'); 
-            });
+            $settings = $settings
+                ->orWhere('name', 'LIKE', '%' . $search . '%')
+                ->orWhere('remark', 'LIKE', '%' . $search . '%')
+                ->orWhereHas('screenFirst', function ($query) use ($search) {
+                    return $query->where('center_text', 'LIKE', '%' . $search . '%');
+                })
+                ->orWhereHas('screenFirst', function ($query) use ($search) {
+                    return $query->where('right_text', 'LIKE', '%' . $search . '%');
+                })
+                ->orWhereHas('user', function ($query) use ($search) {
+                    return $query->where('username', 'LIKE', '%' . $search . '%');
+                });
         }
 
         if (isset($request->o)) {
-            $ob = $request->ob;
-            $o = $request->o;
+            $orderBy = $request->ob;
+            $order = $request->o;
         }
 
-        if ($ob == 'username') {
-            $settings = $settings->orderBy(User::select($ob)->whereColumn('settings.user_id', 'users.id'),$o);
-        }else if($ob == 'banner_height' || $ob == 'banner_border' || $ob == 'center_text' || $ob == 'right_text'){
-            
-            $settings = $settings->orderBy(SettingScreen::select($ob)->whereColumn('settings.id', 'setting_screens.setting_id')->orderBy('setting_screens.id')->limit(1),$o);
-
-        }else{
-            $settings = $settings->orderBy($ob, $o);
+        if ($orderBy === 'username') {
+            $settings = $settings->orderBy(User::select($orderBy)->whereColumn('settings.user_id', 'users.id'), $order);
+        } elseif (in_array($orderBy, ['banner_height', 'banner_border', 'center_text', 'right_text'])) {
+            $settings = $settings->orderBy(
+                SettingScreen::select($orderBy)
+                    ->whereColumn('settings.id', 'setting_screens.setting_id')
+                    ->orderBy('setting_screens.id')
+                    ->limit(1),
+                $order
+            );
+        } else {
+            $settings = $settings->orderBy($orderBy, $order);
         }
 
         $settings = $settings->paginate(env('PAGINATE_NO_OF_ROWS'));
-        
-        $settings->appends($request->except(['page']));
-        
 
-        return Inertia::render('Settings/Index', ['settings' => $settings,'s' => $s,'o' => $o,'ob' => $ob,'firstitem' => $settings->firstItem()]);
+        $settings->appends($request->except(['page']));
+
+        return Inertia::render('Settings/Index', [
+            'settings' => $settings,
+            's' => $search,
+            'o' => $order,
+            'ob' => $orderBy,
+            'firstitem' => $settings->firstItem(),
+        ]);
     }
-  
+
     /**
      * Write code on Method
      *
      * @return response()
      */
-    public function create(){
-        // $permissions = Permission::all();
-        return Inertia::render('Settings/Create');
+    public function create()
+    {
+        $users = User::withTrashed()->get();
+
+        $user = Auth::user();
+
+        return Inertia::render('Settings/Create', [
+            'users' => $users,
+            'role_id' => $user->role_id
+        ]);
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
      * @return Response
      */
-    public function store(Request $request){
-        
+    public function store(Request $request)
+    {
         $this->settingValidation($request);
 
+        $user = auth()->user();
         $data = $request->all();
 
+        if ($user->role_id === 1 && isset($data['selectedUser']) && $data['selectedUser'] !== '') {
+            $userId = $data['selectedUser'];
+        } else {
+            $userId = $user->id;
+        }
 
         $setting = Setting::create([
-            'user_id' => auth()->id(),
+            'user_id' => $userId,
             'name' => $data['name'],
             'remark' => $data['remark'],
         ]);
 
-        for ($i=1; $i <= $data['screen']; $i++) { 
+        for ($i=1; $i <= $data['screen']; $i++) {
             SettingScreen::create([
                 'setting_id' => $setting->id,
                 'banner_height' => $data['banner_height_'.$i],
@@ -120,28 +143,24 @@ class SettingController extends Controller
 
         return redirect()->route('settings.index')->with('success', 'Data inserted successfully!');
     }
-  
+
     /**
      * Write code on Method
      *
      * @return response()
      */
-    public function edit(Setting $setting){
-
-
-
+    public function edit(Setting $setting)
+    {
         $data = [];
         $data['id'] = $setting->id;
         $data['name'] = $setting->name;
         $data['remark'] = $setting->remark;
-        
         $data['screen'] = 0;
         $data['screenselect'] = 0;
 
-        
-        foreach ($setting->screens()->orderby('id')->get() as $key => $value) {    
-            
-            $row = $key+1;
+        foreach ($setting->screens()->orderby('id')->get() as $key => $value) {
+
+            $row = $key + 1;
 
             $data['banner_height_'.$row] = $value->banner_height;
             $data['text_size_'.$row] = $value->text_size;
@@ -155,7 +174,6 @@ class SettingController extends Controller
             $data['alarm_message_'.$row] = $value->alarm_message;
             $data['info_checks_'.$row] = json_decode($value->info_checks,true);
 
-
             $data['screen']++;
             $data['screenselect']++;
         }
@@ -165,12 +183,11 @@ class SettingController extends Controller
             $data['screenselect'] = 1;
         }
 
-        
         return Inertia::render('Settings/Edit', [
             'data' => $data,
         ]);
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -178,9 +195,7 @@ class SettingController extends Controller
      */
     public function update(Request $request, Setting $setting)
     {
-
         $this->settingValidation($request);
-
 
         $data = $request->all();
 
@@ -191,8 +206,7 @@ class SettingController extends Controller
 
         SettingScreen::where('setting_id',$setting->id)->delete();
 
-       
-        for ($i=1; $i <= $data['screen']; $i++) { 
+        for ($i=1; $i <= $data['screen']; $i++) {
 
             SettingScreen::create([
                 'setting_id' => $setting->id,
@@ -212,23 +226,24 @@ class SettingController extends Controller
 
         return redirect()->route('settings.index')->with('success', 'Data updated successfully!');
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
      * @return Response
      */
-    public function destroy(Setting $setting){
+    public function destroy(Setting $setting)
+    {
         $setting->delete();
-    
+
         return redirect()->route('settings.index')->with('success', 'Data deleted successfully!');
     }
 
-    public function settingValidation($request){
-
+    public function settingValidation($request)
+    {
         $validationarray = [];
         $validationarray['name'] = 'required';
-        for ($i=1; $i <= $request->screen; $i++) { 
+        for ($i=1; $i <= $request->screen; $i++) {
             $validationarray['hearbeat_'.$i] = 'required|numeric|between:0,999';
             $validationarray['text_size_'.$i] = 'required|numeric|between:0,99';
             $validationarray['banner_height_'.$i] = 'required|numeric|between:0,999';
@@ -244,7 +259,7 @@ class SettingController extends Controller
     }
 
     public function generalSetting() {
-        
+
         $formates = [[
             'value' => 'D-MMM-Y',
             'label' => date('d-M-Y'),
@@ -258,7 +273,6 @@ class SettingController extends Controller
             'value' => 'D/M/Y',
             'label' => date('d/m/Y'),
         ]];
-
 
         // $stripe_env = [[
         //     'value' => 'test',
@@ -276,8 +290,6 @@ class SettingController extends Controller
         //     'label' => 'Live (Production)',
         // ]];
 
-
-        
         $company_name = GeneralSetting::where('key','company_name')->first();
         $application_name = GeneralSetting::where('key','application_name')->first();
         $format_date =    GeneralSetting::where('key','format_date')->first();
@@ -301,158 +313,155 @@ class SettingController extends Controller
 
         $header_script = GeneralSetting::where('key','header_script')->first();
         $footer_script = GeneralSetting::where('key','footer_script')->first();
-        
-            
-        return Inertia::render('Settings/GeneralSetting',['formates' => $formates, 'company_name' => $company_name,'application_name' => $application_name,'format_date' => $format_date,'currency' => $currency,'site_icon' => $site_icon,'site_logo' => $site_logo,'fav_icon' => $fav_icon,'stripe_status' => $stripe_status,'stripe_env' => $stripe_env,'test_publickey' => $test_publickey,'test_secretkey' => $test_secretkey,'live_publickey' => $live_publickey,'live_secretkey' => $live_secretkey,'paypal_status' => $paypal_status,'paypal_env'=> $paypal_env ,'test_publickey_paypal' => $test_publickey_paypal,'test_secretkey_paypal' => $test_secretkey_paypal,'live_publickey_paypal'=> $live_publickey_paypal,'live_secretkey_paypal'=>$live_secretkey_paypal,'header_script'=>$header_script,'footer_script'=>$footer_script]);
-    } 
-    
-    public function generalSettingSubmit(Request $request) {
-        
+
+        return Inertia::render('Settings/GeneralSetting', compact('formates', 'company_name', 'application_name', 'format_date', 'currency', 'site_icon', 'site_logo', 'fav_icon', 'stripe_status', 'stripe_env', 'test_publickey', 'test_secretkey', 'live_publickey', 'live_secretkey', 'paypal_status', 'paypal_env', 'test_publickey_paypal', 'test_secretkey_paypal', 'live_publickey_paypal', 'live_secretkey_paypal', 'header_script', 'footer_script'));
+    }
+
+    public function generalSettingSubmit(Request $request)
+    {
         $this->validate($request, [
-            '*'     => new NoSpecialChars,
+            '*' => new NoSpecialChars,
         ]);
 
-        $setting = GeneralSetting::firstOrNew(['key' => 'company_name']); 
+        $setting = GeneralSetting::firstOrNew(['key' => 'company_name']);
         $setting->value = $request->company_name;
         $setting->save();
 
-        $setting = GeneralSetting::firstOrNew(['key' => 'application_name']); 
+        $setting = GeneralSetting::firstOrNew(['key' => 'application_name']);
         $setting->value = $request->application_name;
         $setting->save();
-        
-        $setting = GeneralSetting::firstOrNew(['key' => 'format_date']); 
+
+        $setting = GeneralSetting::firstOrNew(['key' => 'format_date']);
         $setting->value = $request->format_date;
         $setting->save();
 
-        $setting = GeneralSetting::firstOrNew(['key' => 'currency']); 
+        $setting = GeneralSetting::firstOrNew(['key' => 'currency']);
         $setting->value = $request->currency;
         $setting->save();
 
-        
-        if($file = $request->file('site_icon')){  
-            $name = $file->getClientOriginalName();  
-            $file->move('uploads/general-setting',$name);  
-            
-            $setting = GeneralSetting::firstOrNew(['key' => 'site_icon']); 
+        if($file = $request->file('site_icon')){
+            $name = $file->getClientOriginalName();
+            $file->move('uploads/general-setting',$name);
+
+            $setting = GeneralSetting::firstOrNew(['key' => 'site_icon']);
             $setting->value = 'uploads/general-setting/'.$name;
             $setting->save();
         }
 
-        if($file = $request->file('site_logo')){  
-            $name = $file->getClientOriginalName();  
-            $file->move('uploads/general-setting',$name);  
-            
-            $setting = GeneralSetting::firstOrNew(['key' => 'site_logo']); 
+        if($file = $request->file('site_logo')){
+            $name = $file->getClientOriginalName();
+            $file->move('uploads/general-setting',$name);
+
+            $setting = GeneralSetting::firstOrNew(['key' => 'site_logo']);
             $setting->value = 'uploads/general-setting/'.$name;
             $setting->save();
         }
 
-        if($file = $request->file('fav_icon')){  
-            $name = $file->getClientOriginalName();  
-            $file->move('uploads/general-setting',$name);  
-            
-            $setting = GeneralSetting::firstOrNew(['key' => 'fav_icon']); 
+        if($file = $request->file('fav_icon')){
+            $name = $file->getClientOriginalName();
+            $file->move('uploads/general-setting',$name);
+
+            $setting = GeneralSetting::firstOrNew(['key' => 'fav_icon']);
             $setting->value = 'uploads/general-setting/'.$name;
             $setting->save();
         }
 
         if(!empty($request->stripe_env)){
-            $setting = GeneralSetting::firstOrNew(['key' => 'stripe_env']); 
+            $setting = GeneralSetting::firstOrNew(['key' => 'stripe_env']);
             $setting->value = $request->stripe_env;
             $setting->save();
         }
 
         if(!empty($request->test_publickey)){
-
-            $setting = GeneralSetting::firstOrNew(['key' => 'test_publickey']); 
+            $setting = GeneralSetting::firstOrNew(['key' => 'test_publickey']);
             $setting->value = $request->test_publickey;
             $setting->save();
         }
 
         if(!empty($request->test_secretkey)){
-
-            $setting = GeneralSetting::firstOrNew(['key' => 'test_secretkey']); 
+            $setting = GeneralSetting::firstOrNew(['key' => 'test_secretkey']);
             $setting->value = $request->test_secretkey;
             $setting->save();
         }
 
         if(!empty($request->live_publickey)){
-
-            $setting = GeneralSetting::firstOrNew(['key' => 'live_publickey']); 
+            $setting = GeneralSetting::firstOrNew(['key' => 'live_publickey']);
             $setting->value = $request->live_publickey;
             $setting->save();
         }
-        if(!empty($request->live_secretkey)){
 
-            $setting = GeneralSetting::firstOrNew(['key' => 'live_secretkey']); 
+        if(!empty($request->live_secretkey)){
+            $setting = GeneralSetting::firstOrNew(['key' => 'live_secretkey']);
             $setting->value = $request->live_secretkey;
             $setting->save();
         }
-        if(!empty($request->stripe_status)){
 
-            $setting = GeneralSetting::firstOrNew(['key' => 'stripe_status']); 
+        if(!empty($request->stripe_status)){
+            $setting = GeneralSetting::firstOrNew(['key' => 'stripe_status']);
             $setting->value = $request->stripe_status;
             $setting->save();
         }
-        if(!empty($request->paypal_status)){
 
-            $setting = GeneralSetting::firstOrNew(['key' => 'paypal_status']); 
+        if(!empty($request->paypal_status)){
+            $setting = GeneralSetting::firstOrNew(['key' => 'paypal_status']);
             $setting->value = $request->paypal_status;
             $setting->save();
         }
-        if(!empty($request->paypal_env)){
 
-            $setting = GeneralSetting::firstOrNew(['key' => 'paypal_env']); 
+        if(!empty($request->paypal_env)){
+            $setting = GeneralSetting::firstOrNew(['key' => 'paypal_env']);
             $setting->value = $request->paypal_env;
             $setting->save();
         }
-        if(!empty($request->test_publickey_paypal)){
 
-            $setting = GeneralSetting::firstOrNew(['key' => 'test_publickey_paypal']); 
+        if(!empty($request->test_publickey_paypal)){
+            $setting = GeneralSetting::firstOrNew(['key' => 'test_publickey_paypal']);
             $setting->value = $request->test_publickey_paypal;
             $setting->save();
         }
+
         if(!empty($request->test_secretkey_paypal)){
 
-            $setting = GeneralSetting::firstOrNew(['key' => 'test_secretkey_paypal']); 
+            $setting = GeneralSetting::firstOrNew(['key' => 'test_secretkey_paypal']);
             $setting->value = $request->test_secretkey_paypal;
             $setting->save();
         }
-        if(!empty($request->live_publickey_paypal)){
 
-            $setting = GeneralSetting::firstOrNew(['key' => 'live_publickey_paypal']); 
+        if(!empty($request->live_publickey_paypal)){
+            $setting = GeneralSetting::firstOrNew(['key' => 'live_publickey_paypal']);
             $setting->value = $request->live_publickey_paypal;
             $setting->save();
         }
-        if(!empty($request->live_secretkey_paypal)){
 
-            $setting = GeneralSetting::firstOrNew(['key' => 'live_secretkey_paypal']); 
+        if(!empty($request->live_secretkey_paypal)){
+            $setting = GeneralSetting::firstOrNew(['key' => 'live_secretkey_paypal']);
             $setting->value = $request->live_secretkey_paypal;
             $setting->save();
         }
 
         if(!empty($request->header_script)){
-            $setting = GeneralSetting::firstOrNew(['key' => 'header_script']); 
+            $setting = GeneralSetting::firstOrNew(['key' => 'header_script']);
             $setting->value = $request->header_script;
             $setting->save();
         }
 
         if(!empty($request->footer_script)){
-            $setting = GeneralSetting::firstOrNew(['key' => 'footer_script']); 
+            $setting = GeneralSetting::firstOrNew(['key' => 'footer_script']);
             $setting->value = $request->footer_script;
             $setting->save();
         }
 
-
         return redirect()->route('general-setting.index')->with('success', 'Data updated successfully!');
     }
 
-    public function settingsMultipleDelete(Request $request){
+    public function settingsMultipleDelete(Request $request)
+    {
         foreach ($request->settings as $value) {
             $setting = Setting::find($value);
             $setting->delete();
         }
-    
+
         return redirect()->route('settings.index')->with('success', 'Data deleted successfully!');
     }
+
 }

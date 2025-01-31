@@ -7,8 +7,7 @@ import Checkbox from '@/Components/Checkbox';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import $ from 'jquery';
 
-
-export default function Form({ data,errors,setData }) {
+export default function Form({ data, errors, setData, permissions, users, role_id }) {
     // const information_display = ['IP address', 'User Name', 'Computer Name', 'OS Info', 'Device ID', 'Group'];
 
     /* const handleChange = (e) => {
@@ -98,6 +97,35 @@ export default function Form({ data,errors,setData }) {
 
     return (
        <div>
+
+           {role_id === 1 && (
+               <div className='row g-3 my-2'>
+                   <div className='col-md-6'>
+                       <div className="mb-3">
+                           <InputLabel htmlFor="user" value="Select User" />
+                           <select
+                               id="user"
+                               name="selectedUser"
+                               value={data.selectedUser}
+                               onChange={updateData}
+                               className="form-control"
+                           >
+                               <option value="">Select a user</option>
+                               {Array.isArray(users) && users.length > 0 ? (
+                                   users.map(user => (
+                                       <option key={user.id} value={user.id}>
+                                           {user.id}. {user.name}
+                                       </option>
+                                   ))
+                               ) : (
+                                   <option value="" disabled>No users available</option>
+                               )}
+                           </select>
+                           <InputError message={errors.selectedUser} className="mt-2" />
+                       </div>
+                   </div>
+               </div>
+           )}
 
             <div className='row g-3 my-2'>
                 <div className='col-md-6'>

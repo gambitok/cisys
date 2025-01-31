@@ -52,10 +52,10 @@ export default function Index(props) {
     function allCheckboxUncheckCode(){
         let allsettings = [];
         setData("settings", allsettings)
-        
+
         $("#unselectAll").hide();
         $("#selectAll").show();
-        
+
         $("input[type='checkbox']").prop("checked", false);
     }
 
@@ -77,9 +77,9 @@ export default function Index(props) {
             header={'Settings'}
             headtitle={'Settings'}
         >
-            
-            
-            
+
+
+
             {
                 RoleManageArray.roles.settings == 2 && (
                     <div className="flex items-center justify-between mb-6 float-end create-button-listing">
@@ -94,13 +94,13 @@ export default function Index(props) {
                 )
             }
 
-            
+
             <div className="table-responsive">
-                
-                
+
+
                 <TabelSearchBox s={props.s} o={props.o} ob={props.ob} route='settings' />
 
-                
+
                 <table className="table">
                     <thead className="table-light">
                         <tr>
@@ -147,7 +147,7 @@ export default function Index(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {props.settings.data.map((setting,key) => ( 
+                        {props.settings.data.map((setting,key) => (
                             <tr>
                                 <td className="border px-2 py-2">
                                     <Checkbox name="setting[]" value={setting.id} handleChange={handleChange} />
@@ -168,7 +168,7 @@ export default function Index(props) {
                                 <td className="border px-2 py-2"><input type='color' value={ setting?.screen_first?.banner_color } readOnly /></td>
                                 <td className="border px-2 py-2"><input type='color' value={ setting?.screen_first?.text_color } readOnly /></td>
                                 <td className="border px-2 py-2">{ setting.remark }</td>
-                                
+
                                     {
                                         RoleManageArray.roles.settings == 2 && (
                                             <td className="border px-2 py-2">
@@ -177,8 +177,8 @@ export default function Index(props) {
                                                         Edit
                                                     </Link>
                                                 </div>
-                                            
-                                        
+
+
                                                 <div className='row mt-2'>
                                                     <button
                                                         onClick={destroy}
@@ -192,13 +192,13 @@ export default function Index(props) {
                                             </td>
                                         )
                                     }
-                                       
-                                    
-                               
+
+
+
                             </tr>
                         ))}
 
-                        
+
                         {props.settings.data.length === 0 && (
                             <tr>
                                 <td
@@ -216,7 +216,7 @@ export default function Index(props) {
                 <Paginate datas={props.settings} />
 
             </div>
-            
+
         </Authenticated>
     );
 }
