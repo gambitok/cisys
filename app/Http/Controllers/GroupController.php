@@ -73,15 +73,16 @@ class GroupController extends Controller
 
         $groups->appends($request->except(['page']));
 
-        $setting = Setting::all();
-        $settings = [];
+        $users = User::withTrashed()->get()->keyBy('id');
 
-        foreach ($setting as $value) {
-            $settings[] = [
-                'value' => $value->id,
-                'label' => $value->name,
+        $settings = Group::with('user')->get()->map(function ($setting) use ($users) {
+            $userName = isset($users[$setting->user_id]) ? $users[$setting->user_id]->name : 'Unknown user';
+
+            return [
+                'value' => $setting->id,
+                'label' => "{$userName}: {$setting->name}",
             ];
-        }
+        })->values();
 
         return Inertia::render('Groups/Index', [
             'groups' => $groups,
@@ -196,6 +197,19 @@ class GroupController extends Controller
         Group::whereIn('id', $request->groups)->update(['setting_id' => $request->setting_id]);
 
         return redirect()->back()->with('success', 'Data updated successfully!');
+    }
+
+    public function groupsMultipleDelete(Request $request)
+    {
+        foreach ($request->groups as $value) {
+            $group = Group::find($value);
+
+            if ($group) {
+                $group->delete();
+            }
+        }
+
+        return redirect()->route('groups.index')->with('success', 'Data deleted successfully!');
     }
 
 }

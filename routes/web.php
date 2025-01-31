@@ -52,10 +52,8 @@ Route::get('/verify-email-edit/{token}', [UserController::class, 'verifyEmail'])
 })->middleware(['auth', 'verified'])->name('dashboard'); */
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
-
 Route::get('/auth/google', [GoogleController::class, 'googlepage'])->name('authlogin');
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
-
 
 Route::middleware('auth', 'verified')->group(function () {
 
@@ -68,23 +66,21 @@ Route::middleware('auth', 'verified')->group(function () {
         return Inertia::render('Home',['rolename'=>$rolename]);
     })->name('home');
 
-
     Route::middleware('role')->group(function () {
 
         Route::resource('settings', SettingController::class);
 
         Route::post('settings-multiple-delete', [SettingController::class, 'settingsMultipleDelete'])->name('settings.multiple.delete');
 
-
         Route::resource('groups', GroupController::class);
 
         Route::get('clients', [ClientController::class, 'index'])->name('clients.index');
         Route::post('client-groups-bind', [ClientController::class, 'clientGroupsBind'])->name('clients.client-groups-bind');
+        Route::post('clients-multiple-delete', [ClientController::class, 'clientsMultipleDelete'])->name('clients.multiple.delete');
 
         Route::resource('users', UserController::class);
         Route::post('users-multiple-delete', [UserController::class, 'usersMultipleDelete'])->name('users.multiple.delete');
         Route::get('user-genreate-key/{id}', [UserController::class, 'userGenreateKey'])->name('user-genreate-key');
-
 
         Route::resource('roles', RoleController::class);
 
@@ -92,13 +88,11 @@ Route::middleware('auth', 'verified')->group(function () {
 
         Route::post('products-multiple-delete', [ProductController::class, 'productsMultipleDelete'])->name('products.multiple.delete');
 
-
         Route::resource('coupons', CouponController::class);
 
         Route::resource('plans', PlanController::class);
 
         Route::resource('menus', MenuController::class);
-
 
         Route::get('licenses', [LicenseController::class, 'index'])->name('licenses.index');
         Route::get('licenses/create', [LicenseController::class, 'create'])->name('licenses.create');
@@ -108,8 +102,6 @@ Route::middleware('auth', 'verified')->group(function () {
 
         Route::post('licenses/validate-server-id', [LicenseController::class, 'validateServerID'])->name('licenses.validate-server-id');
         Route::post('licenses/check-coupon-valid', [LicenseController::class, 'checkCouponValid'])->name('licenses.check-coupon-valid');
-
-
 
         Route::get('coupon-history', [CouponHistoryController::class, 'index'])->name('coupon-history.index');
 
@@ -123,19 +115,15 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::post('general-setting', [SettingController::class, 'generalSettingSubmit'])->name('setting.general.store');
     });
 
-
-
     Route::controller(StripePaymentController::class)->group(function(){
         Route::post('stripe', 'stripe')->name('stripe.payment');
         Route::get('stripe/{plan_id}/{expiry_year}', 'stripeReturnUrl')->name('stripe.returnurl');
         Route::post('stripecreate', 'stripecreate');
     });
 
-
     Route::post('paypal-process', [PayPalController::class, 'processTransaction'])->name('paypalProcess');
     Route::get('paypal-success/{plan_id}/{expiry_year}', [PayPalController::class, 'successTransaction'])->name('paypalSuccess');
     Route::get('paypal-cancel', [PayPalController::class, 'cancelTransaction'])->name('paypalCancel');
-
 
     Route::get('submenu/{menuid}/create', [SubMenuController::class,'create'])->name('submenu.create');
     Route::post('submenu/store', [SubMenuController::class,'store'])->name('submenu.store');
@@ -143,23 +131,19 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::put('submenu/{menu}/update', [SubMenuController::class,'update'])->name('submenu.update');
     Route::delete('submenu/{menu}/destroy', [SubMenuController::class,'destroy'])->name('submenu.destroy');
 
-
-
+    Route::post('groups-multiple-delete', [GroupController::class, 'groupsMultipleDelete'])->name('groups.multiple.delete');
     Route::post('groups-bind', [GroupController::class, 'groupsBind'])->name('groups.bind');
     Route::post('clients-bind', [GroupController::class, 'clientsBind'])->name('clients.bind');
 
     Route::get('checkRoleGetApi', [UserController::class, 'checkRoleGetApi'])->name('checkRoleGetApi');
 
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-
     Route::get('/get-user-data-popup/{id}', [UserController::class, 'getUserDataPopup'])->name('get-user-data-popup');
 
 });
-
 
 require __DIR__.'/auth.php';
 

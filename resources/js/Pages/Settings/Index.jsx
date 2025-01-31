@@ -63,7 +63,7 @@ export default function Index(props) {
         $(".alert").remove();
         if (data.settings == '') {
             $("<div class='alert alert-danger'>Please select any setting</div>").insertBefore("main");
-        }else{
+        } else {
             post(route("settings.multiple.delete"));
             $("input[type='checkbox']").prop("checked", false);
         }
@@ -77,8 +77,6 @@ export default function Index(props) {
             header={'Settings'}
             headtitle={'Settings'}
         >
-
-
 
             {
                 RoleManageArray.roles.settings == 2 && (
@@ -94,12 +92,9 @@ export default function Index(props) {
                 )
             }
 
-
             <div className="table-responsive">
 
-
                 <TabelSearchBox s={props.s} o={props.o} ob={props.ob} route='settings' />
-
 
                 <table className="table">
                     <thead className="table-light">
@@ -193,11 +188,8 @@ export default function Index(props) {
                                         )
                                     }
 
-
-
                             </tr>
                         ))}
-
 
                         {props.settings.data.length === 0 && (
                             <tr>

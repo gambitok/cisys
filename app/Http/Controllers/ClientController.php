@@ -129,15 +129,24 @@ class ClientController extends Controller
             'setting_id' => 'required'
         ]);
 
-//        Client::whereIn('id', $request->clients)->update(['setting_id' => $request->setting_id]);
-
-        // Fetch the unique group IDs from the provided client IDs
         $groupIds = Client::whereIn('id', $request->clients)->pluck('group_id')->unique();
 
-        // Update the setting_id for those groups
         Group::whereIn('id', $groupIds)->update(['setting_id' => $request->setting_id]);
 
         return redirect()->back()->with('success', 'Data updated successfully!');
+    }
+
+    public function clientsMultipleDelete(Request $request)
+    {
+        foreach ($request->clients as $value) {
+            $client = Client::find($value);
+
+            if ($client) {
+                $client->delete();
+            }
+        }
+
+        return redirect()->route('clients.index')->with('success', 'Data deleted successfully!');
     }
 
 }

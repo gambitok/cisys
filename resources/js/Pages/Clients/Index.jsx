@@ -23,6 +23,16 @@ export default function Index(props) {
 
     useEffect(() => {}, []);
 
+    function deleteCheckBoxValided(){
+        $(".alert").remove();
+        if (data.clients == '') {
+            $("<div class='alert alert-danger'>Please select any client</div>").insertBefore("main");
+        } else {
+            post(route("clients.multiple.delete"));
+            $("input[type='checkbox']").prop("checked", false);
+        }
+    }
+
     const optionChanged = value => {
         setData("group_id", value.value);
     };
@@ -200,6 +210,9 @@ export default function Index(props) {
 
             {RoleManageArray.roles.clients == 2 && (
                 <div className="flex items-center justify-between mb-6 float-end create-button-listing">
+                    <a className="btn btn-danger waves-effect waves-light mr-5" href='javascript:void(0)' onClick={deleteCheckBoxValided}>
+                        Delete Clients
+                    </a>
                     <a className="btn btn-success waves-effect waves-light mr-5" href='javascript:void(0)'
                        onClick={settingCheckBoxValided}>
                         Bind Setting ID
