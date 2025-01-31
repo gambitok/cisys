@@ -458,7 +458,10 @@ class SettingController extends Controller
     {
         foreach ($request->settings as $value) {
             $setting = Setting::find($value);
-            $setting->delete();
+
+            if ($setting) {
+                $setting->delete();
+            }
         }
 
         return redirect()->route('settings.index')->with('success', 'Data deleted successfully!');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -77,10 +78,23 @@ class ClientController extends Controller
 
         $clients->appends($request->except(['page']));
 
-        $groups = Group::with('user')->get()->map(function ($group) {
+        $users = User::withTrashed()->get()->keyBy('id');
+
+        $groups = Group::with('user')->get()->map(function ($group) use ($users) {
+            $userName = isset($users[$group->user_id]) ? $users[$group->user_id]->name : 'Unknown user';
+
             return [
                 'value' => $group->id,
-                'label' => ($group->user ? "{$group->user->name}" : 'Unknown user') . ': ' . $group->name,
+                'label' => "{$userName}: {$group->name}",
+            ];
+        })->values();
+
+        $settings = Group::with('user')->get()->map(function ($setting) use ($users) {
+            $userName = isset($users[$setting->user_id]) ? $users[$setting->user_id]->name : 'Unknown user';
+
+            return [
+                'value' => $setting->id,
+                'label' => "{$userName}: {$setting->name}",
             ];
         })->values();
 
@@ -89,6 +103,7 @@ class ClientController extends Controller
             [
                 'clients' => $clients,
                 'groups' => $groups,
+                'settings' => $settings,
                 's' => $search,
                 'o' => $order,
                 'ob' => $orderBy,
@@ -97,12 +112,30 @@ class ClientController extends Controller
         );
     }
 
-    public function clientGroupsBind(Request $request) {
+    public function clientGroupsBind(Request $request)
+    {
         $this->validate($request, [
             'group_id'    => 'required'
         ]);
 
-        Client::whereIn('id',$request->clients)->update(['group_id'=>$request->group_id]);
+        Client::whereIn('id', $request->clients)->update(['group_id' => $request->group_id]);
+
+        return redirect()->back()->with('success', 'Data updated successfully!');
+    }
+
+    public function clientsBind(Request $request)
+    {
+        $this->validate($request, [
+            'setting_id' => 'required'
+        ]);
+
+//        Client::whereIn('id', $request->clients)->update(['setting_id' => $request->setting_id]);
+
+        // Fetch the unique group IDs from the provided client IDs
+        $groupIds = Client::whereIn('id', $request->clients)->pluck('group_id')->unique();
+
+        // Update the setting_id for those groups
+        Group::whereIn('id', $groupIds)->update(['setting_id' => $request->setting_id]);
 
         return redirect()->back()->with('success', 'Data updated successfully!');
     }

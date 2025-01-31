@@ -58,7 +58,7 @@ Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback'])
 
 
 Route::middleware('auth', 'verified')->group(function () {
-    
+
     Route::get('/home', function () {
         if (Auth::user()->role) {
             $rolename = Auth::user()->role->name;
@@ -70,14 +70,14 @@ Route::middleware('auth', 'verified')->group(function () {
 
 
     Route::middleware('role')->group(function () {
-       
+
         Route::resource('settings', SettingController::class);
 
         Route::post('settings-multiple-delete', [SettingController::class, 'settingsMultipleDelete'])->name('settings.multiple.delete');
-        
-        
+
+
         Route::resource('groups', GroupController::class);
-        
+
         Route::get('clients', [ClientController::class, 'index'])->name('clients.index');
         Route::post('client-groups-bind', [ClientController::class, 'clientGroupsBind'])->name('clients.client-groups-bind');
 
@@ -119,7 +119,7 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::get('icons', [IconController::class, 'index'])->name('icons.index');
 
         Route::get('general-setting', [SettingController::class, 'generalSetting'])->name('general-setting.index');
-        
+
         Route::post('general-setting', [SettingController::class, 'generalSettingSubmit'])->name('setting.general.store');
     });
 
@@ -142,13 +142,14 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('submenu/{id}/edit', [SubMenuController::class,'edit'])->name('submenu.edit');
     Route::put('submenu/{menu}/update', [SubMenuController::class,'update'])->name('submenu.update');
     Route::delete('submenu/{menu}/destroy', [SubMenuController::class,'destroy'])->name('submenu.destroy');
-    
+
 
 
     Route::post('groups-bind', [GroupController::class, 'groupsBind'])->name('groups.bind');
-    
+    Route::post('clients-bind', [GroupController::class, 'clientsBind'])->name('clients.bind');
+
     Route::get('checkRoleGetApi', [UserController::class, 'checkRoleGetApi'])->name('checkRoleGetApi');
-    
+
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

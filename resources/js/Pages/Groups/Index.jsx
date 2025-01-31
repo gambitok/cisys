@@ -21,7 +21,7 @@ export default function Index(props) {
         "setting_id": "",
         "ldaptoggle": props.ldap,
     });
-    
+
     const optionChanged = value => {
         setData("setting_id",value.value);
     };
@@ -38,6 +38,7 @@ export default function Index(props) {
         );
     };
 
+    /*
     function checkBoxValided(){
         $(".alert").remove();
         if (data.groups == '') {
@@ -46,6 +47,7 @@ export default function Index(props) {
             $('#exampleModalButton').trigger("click");
         }
     }
+     */
 
     function destroy(e) {
         if (confirm("Are you sure you want to delete this group?")) {
@@ -75,10 +77,10 @@ export default function Index(props) {
     function allCheckboxUncheckCode(){
         let allgroup = [];
         setData("groups", allgroup)
-        
+
         $("#unselectAll").hide();
         $("#selectAll").show();
-        
+
         $("input[type='checkbox']").prop("checked", false);
     }
 
@@ -86,7 +88,7 @@ export default function Index(props) {
         setData("ldaptoggle",!data.ldaptoggle);
         Common.makeUrlWithSearchAndOrder('groups',props.s,props.o,props.ob,!data.ldaptoggle);
     }
-    
+
     return (
         <Authenticated
             props={props}
@@ -95,53 +97,50 @@ export default function Index(props) {
             header={'Group'}
             headtitle={'Group'}
         >
-            
-            
 
-            <button type="button" id='exampleModalButton' className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style={{display:'none'}}>
-                Launch demo modal
-            </button>
+            {/*<button type="button" id='exampleModalButton' className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style={{display:'none'}}>*/}
+            {/*    Launch demo modal*/}
+            {/*</button>*/}
 
-            <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
+            {/*<div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">*/}
+            {/*    <div className="modal-dialog">*/}
+            {/*        <div className="modal-content">*/}
 
-                        <form name="createForm" onSubmit={handleSubmit}>
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Bind Group</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                <div>Please select the setting name.</div>
-                                <div className='row g-3 my-2'>
-                                    <div className='col-md-12'>
-                                        <div className="mb-3">
-                                            <InputLabel value="Setting ID" />
-                                            <Select
-                                                className="basic-single"
-                                                classNamePrefix="select"
-                                                name="setting_id"
-                                                options={props.settings}
-                                                onChange={optionChanged}
-                                                styles={{option: (styles, state) => ({...styles,cursor: 'pointer',}),control: (styles) => ({...styles,cursor: 'pointer',}),}}
-                                            />
-                                            <InputError message={errors.setting_id} className="mt-2" />
+            {/*            <form name="createForm" onSubmit={handleSubmit}>*/}
+            {/*                <div className="modal-header">*/}
+            {/*                    <h5 className="modal-title" id="exampleModalLabel">Bind Group</h5>*/}
+            {/*                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>*/}
+            {/*                </div>*/}
+            {/*                <div className="modal-body">*/}
+            {/*                    <div>Please select the setting name.</div>*/}
+            {/*                    <div className='row g-3 my-2'>*/}
+            {/*                        <div className='col-md-12'>*/}
+            {/*                            <div className="mb-3">*/}
+            {/*                                <InputLabel value="Setting ID" />*/}
+            {/*                                <Select*/}
+            {/*                                    className="basic-single"*/}
+            {/*                                    classNamePrefix="select"*/}
+            {/*                                    name="setting_id"*/}
+            {/*                                    options={props.settings}*/}
+            {/*                                    onChange={optionChanged}*/}
+            {/*                                    styles={{option: (styles, state) => ({...styles,cursor: 'pointer',}),control: (styles) => ({...styles,cursor: 'pointer',}),}}*/}
+            {/*                                />*/}
+            {/*                                <InputError message={errors.setting_id} className="mt-2" />*/}
 
-                                        </div>
-                                    </div>
-                                </div> 
-                            </div>
-                            <div className="modal-footer">
-                                <button className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" className="btn btn-primary">Save changes</button>
-                            </div>
-                        </form>
+            {/*                            </div>*/}
+            {/*                        </div>*/}
+            {/*                    </div>*/}
+            {/*                </div>*/}
+            {/*                <div className="modal-footer">*/}
+            {/*                    <button className="btn btn-secondary" data-bs-dismiss="modal">Close</button>*/}
+            {/*                    <button type="submit" className="btn btn-primary">Save changes</button>*/}
+            {/*                </div>*/}
+            {/*            </form>*/}
 
-                    </div>
-                </div>
-            </div>
-                            
-            
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
+
             {
                 RoleManageArray.roles.groups == 2 && (
                     <div className="flex items-center justify-between mb-6 float-end create-button-listing">
@@ -154,22 +153,21 @@ export default function Index(props) {
                             offstyle="default"
                             active={data.ldaptoggle}
                         />
-                        <a className="btn btn-success waves-effect waves-light ml-5" href='javascript:void(0)' onClick={checkBoxValided}>
-                            Bind Setting ID
-                        </a>
+                        {/*<a className="btn btn-success waves-effect waves-light ml-5" href='javascript:void(0)' onClick={checkBoxValided}>*/}
+                        {/*    Bind Setting ID*/}
+                        {/*</a>*/}
                         <Link className="btn btn-primary waves-effect waves-light ml-5" href={ route("groups.create") }>
                             Create group
                         </Link>
-                        
+
                     </div>
                 )
             }
-            
 
             <div className="table-responsive">
-                
+
                 <TabelSearchBox s={props.s} o={props.o} ob={props.ob} route='groups' ldap={data.ldaptoggle} />
-                
+
                 <table className="table">
                     <thead className="table-light">
                         <tr>
@@ -215,32 +213,28 @@ export default function Index(props) {
                                 <td className="border px-2 py-2"></td>
 
                                 {RoleManageArray.roles.groups == 2 && (<td className="border px-2 py-2">
-                                    
-                                    
-                                            <div className='row'>
-                                                <Link tabIndex="1" className="btn btn-primary waves-effect waves-light" href={route("groups.edit", group.id)}>
-                                                    Edit
-                                                </Link>
-                                            </div>
-                                       
-                                    
-                                    
-                                            <div className='row mt-2'>
-                                                <button
-                                                    onClick={destroy}
-                                                    id={group.id}
-                                                    tabIndex="-1"
-                                                    className="btn btn-danger waves-effect waves-light"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </div>
-                                       
-                                    
+
+                                    <div className='row'>
+                                        <Link tabIndex="1" className="btn btn-primary waves-effect waves-light" href={route("groups.edit", group.id)}>
+                                            Edit
+                                        </Link>
+                                    </div>
+
+                                    <div className='row mt-2'>
+                                        <button
+                                            onClick={destroy}
+                                            id={group.id}
+                                            tabIndex="-1"
+                                            className="btn btn-danger waves-effect waves-light"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+
                                 </td>)}
                             </tr>
                         ))}
-                        
+
                         {props.groups.data.length === 0 && (
                             <tr>
                                 <td
@@ -252,14 +246,14 @@ export default function Index(props) {
                                 </td>
                             </tr>
                         )}
-                        
+
                     </tbody>
                 </table>
 
                 <Paginate datas={props.groups} />
-                
+
             </div>
-            
+
         </Authenticated>
     );
 }
