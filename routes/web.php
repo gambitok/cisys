@@ -76,6 +76,7 @@ Route::middleware('auth', 'verified')->group(function () {
 
         Route::get('clients', [ClientController::class, 'index'])->name('clients.index');
         Route::post('client-groups-bind', [ClientController::class, 'clientGroupsBind'])->name('clients.client-groups-bind');
+        Route::post('client-settings-bind', [ClientController::class, 'clientsSettingsBind'])->name('clients.client-settings-bind');
         Route::post('clients-multiple-delete', [ClientController::class, 'clientsMultipleDelete'])->name('clients.multiple.delete');
 
         Route::resource('users', UserController::class);
@@ -133,7 +134,6 @@ Route::middleware('auth', 'verified')->group(function () {
 
     Route::post('groups-multiple-delete', [GroupController::class, 'groupsMultipleDelete'])->name('groups.multiple.delete');
     Route::post('groups-bind', [GroupController::class, 'groupsBind'])->name('groups.bind');
-    Route::post('clients-bind', [GroupController::class, 'clientsBind'])->name('clients.bind');
 
     Route::get('checkRoleGetApi', [UserController::class, 'checkRoleGetApi'])->name('checkRoleGetApi');
 

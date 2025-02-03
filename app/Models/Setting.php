@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Auth;
 
-class Setting extends Model{
+class Setting extends Model
+{
+
     use HasFactory;
     use SoftDeletes;
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -18,26 +20,30 @@ class Setting extends Model{
      */
     protected $guarded = [];
 
-    protected static function boot(){
+    protected static function boot()
+    {
         parent::boot();
         static::addGlobalScope('user', function ($query) {
-            $user = Auth::user();            
+            $user = Auth::user();
             if ($user && $user->role_id > 1) {
                 $query->where('user_id', $user->id);
             }
         });
     }
 
-
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function screens(){
+    public function screens()
+    {
         return $this->hasMany(SettingScreen::class);
     }
 
-    public function screenFirst() {
+    public function screenFirst()
+    {
         return $this->hasOne(SettingScreen::class)->oldestOfMany();
     }
+
 }

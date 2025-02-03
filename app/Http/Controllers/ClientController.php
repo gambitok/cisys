@@ -89,7 +89,7 @@ class ClientController extends Controller
             ];
         })->values();
 
-        $settings = Group::with('user')->get()->map(function ($setting) use ($users) {
+        $settings = Setting::with('user')->get()->map(function ($setting) use ($users) {
             $userName = isset($users[$setting->user_id]) ? $users[$setting->user_id]->name : 'Unknown user';
 
             return [
@@ -123,7 +123,7 @@ class ClientController extends Controller
         return redirect()->back()->with('success', 'Data updated successfully!');
     }
 
-    public function clientsBind(Request $request)
+    public function clientsSettingsBind(Request $request)
     {
         $this->validate($request, [
             'setting_id' => 'required'

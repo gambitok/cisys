@@ -56,7 +56,7 @@ export default function Index(props) {
     function settingCheckBoxValided() {
         $(".alert").remove();
         if (data.clients.length === 0) {
-            $("<div class='alert alert-danger'>Please select any client</div>").insertBefore("main");
+            $("<div class='alert alert-danger'>Please select any setting</div>").insertBefore("main");
         } else {
             $('#settingModalButton').trigger("click");
         }
@@ -79,7 +79,7 @@ export default function Index(props) {
 
     function settingHandleSubmit(e) {
         e.preventDefault();
-        post(route("clients.bind"));
+        post(route("clients.client-settings-bind"));
         $('#settingModalButton').trigger("click");
     }
 
@@ -123,7 +123,7 @@ export default function Index(props) {
 
                         <form name="createForm" onSubmit={settingHandleSubmit}>
                             <div className="modal-header">
-                                <h5 className="modal-title" id="settingModalLabel">Bind Group</h5>
+                                <h5 className="modal-title" id="settingModalLabel">Bind Setting ID</h5>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                             </div>

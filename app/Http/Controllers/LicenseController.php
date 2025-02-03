@@ -23,23 +23,22 @@ class LicenseController extends Controller{
      *
      * @return Response
      */
-    public function index(Request $request){
-        
+    public function index(Request $request)
+    {
         $s = '';
         $o = 'DESC';
         $ob = 'id';
 
         $licenses = License::with(['user','transaction']);
-        
+
         if (isset($request->s)) {
             $s = $request->s;
 
             $licenses = $licenses->orWhere('id','LIKE','%'.$request->s.'%')->orWhere('plan_id','LIKE','%'.$request->s.'%')->orWhere('device_count','LIKE','%'.$request->s.'%')->orWhere('server_id','LIKE','%'.$request->s.'%')->orWhere('buy_date','LIKE','%'.$request->s.'%')->orWhere('expiration_date','LIKE','%'.$request->s.'%');
 
             $licenses = $licenses->orWhereHas('user', function($query) use ($s) {
-                return $query->where('username','LIKE','%'.$s.'%'); 
+                return $query->where('username','LIKE','%'.$s.'%');
             });
-
         }
 
         if (isset($request->o)) {
@@ -49,23 +48,22 @@ class LicenseController extends Controller{
 
         if ($ob == 'username') {
             $licenses = $licenses->orderBy(User::select($ob)->whereColumn('licenses.user_id', 'users.id'),$o);
-        }else{
+        } else {
             $licenses = $licenses->orderBy($ob, $o);
         }
 
         $licenses = $licenses->paginate(env('PAGINATE_NO_OF_ROWS'));
-        
-        $licenses->appends($request->except(['page']));
- 
-    
 
+        $licenses->appends($request->except(['page']));
 
         return Inertia::render('Licenses/Index', ['licenses' => $licenses,'s' => $s,'o' => $o,'ob' => $ob,'firstitem' => $licenses->firstItem()]);
-
     }
-    
-    public function create(){
-        
+
+    public function create()
+    {
+        $user = Auth::user();
+        $role_id = $user->role_id;
+
         /* $user_type = UserType::all();
         $types = [];
         foreach ($user_type as $value) {
@@ -84,10 +82,16 @@ class LicenseController extends Controller{
             ];
         } */
 
-        $all_plans = Plan::with(['coupon','product'])->orderBy('id')->get();
+        $all_plans = Plan::with(['coupon', 'product'])->orderBy('id')->get();
         $plans = [];
-        
+
         foreach ($all_plans as $value) {
+            // Skip plans based on the user's role_id
+            if (($role_id == 14 && $value->role_id == 1) ||
+                ($role_id == 16 && in_array($value->role_id, [1, 14]))) {
+                continue;
+            }
+
             $plans[] = [
                 'value' => $value->id,
                 'label' => $value->name,
@@ -95,13 +99,11 @@ class LicenseController extends Controller{
             ];
         }
 
-
-        return Inertia::render('Licenses/Create',compact('plans','all_plans'));
+        return Inertia::render('Licenses/Create', compact('plans', 'all_plans'));
     }
-    
-    public function store(Request $request){
 
-        
+    public function store(Request $request)
+    {
         $this->validate($request, [
             'plan_id' => 'required',
         ]);
@@ -112,14 +114,14 @@ class LicenseController extends Controller{
             $transaction_id_gen .= $characters[mt_rand(0, 61)];
 
         $transaction_id = $request->plan_id.'_'.$transaction_id_gen;
-        
+
         $this->createLicense($request->plan_id, $payment_type = 1, $transaction_id, $request->expiry_year);
 
         return redirect()->route('licenses.index')->with('success', 'License purchased successfully!');
     }
 
-    public function bindServerID(Request $request){
-        
+    public function bindServerID(Request $request)
+    {
         if (isset($request['license_id'])) {
             $license = License::find($request['license_id']);
             $license->server_id = $request['server_id'];
@@ -129,12 +131,12 @@ class LicenseController extends Controller{
             $expiry_year = $license->expiry_year;
             if ($expiry_year == 0) {
                 $expiration_date = date('Y-m-d H:i:s', strtotime(date("Y-m-d H:i:s"). ' + 14 days'));
-                
-            }else{
-                $expiration_date = date('Y-m-d H:i:s', strtotime(date("Y-m-d H:i:s"). ' + '.$expiry_year.' year'));            
-            }
-            $license->expiration_date = $expiration_date;
 
+            } else {
+                $expiration_date = date('Y-m-d H:i:s', strtotime(date("Y-m-d H:i:s"). ' + '.$expiry_year.' year'));
+            }
+
+            $license->expiration_date = $expiration_date;
 
             $license->save();
 
@@ -149,11 +151,11 @@ class LicenseController extends Controller{
         exit;
     }
 
-    public function downloadLicense(Request $request){
-
+    public function downloadLicense(Request $request)
+    {
         if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1') {
             $server = 0;
-        }else{
+        } else {
             $server = 1;
         }
 
@@ -172,29 +174,26 @@ class LicenseController extends Controller{
             $license = License::find($license_id);
 
             $cert_filename = $license->server_file_cer;
-            
+
             if ($server) {
-                
+
                 // loading signed certificate details
                 $signed_cert = openssl_x509_parse(file_get_contents($cert_filename));
-                
+
                 // validating signed certificate
-            
+
                 // Load and parse the certificate
                 $certResource = openssl_x509_read(file_get_contents($cert_filename));
-            
+
                 // Load and parse the public key
                 $publicKeyResource = openssl_pkey_get_public(file_get_contents($public_key_filename));
-            
+
                 // Verify the certificate against the public key
                 $verifyResult = openssl_x509_verify($certResource, $publicKeyResource);
-                
-            }else{
 
+            } else {
                 $verifyResult = 1;
-                
             }
-            
 
             // Check the verification result
             if ($verifyResult === 1) {
@@ -225,13 +224,12 @@ class LicenseController extends Controller{
 
         echo json_encode($returnjson);
         exit;
-
     }
-    
-    public function validateServerID(Request $request){
 
+    public function validateServerID(Request $request)
+    {
         $samearray = array_diff_assoc($request->all(), array_unique($request->all()));
-        
+
         $licenses = [];
 
         foreach ($request->all() as $key => $value) {
@@ -241,30 +239,29 @@ class LicenseController extends Controller{
             if (in_array($value, $samearray)) {
                 $success = 0;
                 $message = 'This server id input box same value another input box!';
-            }else{
-                /* $license = License::where('server_id',$value)->first();
-                if ($license) {
-                    $success = 0;
-                    $message = 'This server id exits another license!';
-                } */
             }
+            /* else {
+               $license = License::where('server_id',$value)->first();
+               if ($license) {
+                   $success = 0;
+                   $message = 'This server id exits another license!';
+               }
+            }*/
 
-            
             $licenses[] = [
                 'success'       => $success,
                 'license_id'    => $key,
                 'server_id'     => $value,
                 'message'       => $message,
             ];
-
         }
 
         echo json_encode($licenses);
         exit;
-        
     }
 
-    function checkCouponValid(Request $request){
+    function checkCouponValid(Request $request)
+    {
         $couponcode = $request->couponcode;
         $customclients = $request->customclients;
 
@@ -273,4 +270,5 @@ class LicenseController extends Controller{
         echo json_encode($responce);
         exit;
     }
+
 }

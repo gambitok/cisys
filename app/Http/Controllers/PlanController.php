@@ -21,6 +21,7 @@ use App\Rules\PlanCheckCouponIsApplyableOrNot;
 
 class PlanController extends Controller
 {
+
      /**
      * Show the form for creating a new resource.
      *
@@ -46,7 +47,6 @@ class PlanController extends Controller
             $plans = $plans->orWhereHas('product', function($query) use ($s) {
                 return $query->where('name','LIKE','%'.$s.'%');
             });
-
         }
 
         if (isset($request->o)) {
@@ -66,7 +66,13 @@ class PlanController extends Controller
 
         $plans->appends($request->except(['page']));
 
-        return Inertia::render('Plans/Index', ['plans' => $plans,'s' => $s,'o' => $o,'ob' => $ob,'firstitem' => $plans->firstItem()]);
+        return Inertia::render('Plans/Index', [
+            'plans' => $plans,
+            's' => $s,
+            'o' => $o,
+            'ob' => $ob,
+            'firstitem' => $plans->firstItem()
+        ]);
     }
 
     /**
@@ -76,9 +82,9 @@ class PlanController extends Controller
      */
     public function create()
     {
-
         $user_type = Role::all();
         $types = [];
+
         foreach ($user_type as $value) {
             $types[] = [
                 'value' => $value->id,
@@ -114,7 +120,6 @@ class PlanController extends Controller
      */
     public function store(Request $request)
     {
-
         $this->settingValidation($request);
 
         $data = $request->all();
@@ -132,7 +137,6 @@ class PlanController extends Controller
      */
     public function edit(Plan $plan)
     {
-
         $plan['role_id'] = json_decode($plan['role_id']);
 
         $user_type = Role::all();
@@ -185,7 +189,7 @@ class PlanController extends Controller
             'qty' => 'required|integer',
             'price' => 'required|numeric',
             'standalone' => 'required|numeric',
-            'standalone_status' => 'required|boolean',
+            'standalone_status' => 'nullable|boolean',
         ]);
 
         $plan->update($validated);
@@ -207,15 +211,14 @@ class PlanController extends Controller
 
     public function settingValidation($request): void
     {
-
         $this->validate($request, [
             'product_id'    => 'required',
             'role_id'       => 'required',
             'name'          => 'required',
             'qty'           => 'required',
             'price'         => 'required',
-            'standalone'    => 'required|numeric|gte:0',
-            'standalone_status' => 'required|integer',
+            'standalone' => 'required|numeric',
+            'standalone_status' => 'nullable|integer',
             'coupon_id'     => new PlanCheckCouponIsApplyableOrNot($request),
             '*'             => new NoSpecialChars,
         ], $this->customMessages());

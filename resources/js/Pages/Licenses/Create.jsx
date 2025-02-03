@@ -54,7 +54,13 @@ export default function Create(props) {
         newData.plan_id = value.value;
         newData.customclients = sendcustomclients;
         setData(newData);
-        setProductname(plan.product.name);
+
+        if (plan && plan.product) {
+            setProductname(plan.product.name);
+        } else {
+            setProductname('');
+        }
+
         if (plan?.coupon) {
             setCouponcode(plan.coupon.code);
             sendcouponplan = plan.coupon.code;
@@ -195,7 +201,7 @@ export default function Create(props) {
                             <table className="table">
                                 <thead className="table-light">
                                 <tr>
-                                    <th className="px-4 py-2">Product Package Name</th>
+                                    <th className="px-4 py-2">License Package Name</th>
                                     {data.plan_id != 1 ? <th className="px-4 py-2">Year</th> : ''}
                                     <th className="px-4 py-2">Version</th>
                                     <th className="px-4 py-2"># of Client</th>
