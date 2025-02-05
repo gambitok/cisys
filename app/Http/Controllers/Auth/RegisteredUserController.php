@@ -36,15 +36,15 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             // 'email' => 'required|string|email|max:255|unique:'.User::class,
             'email' => 'required|string|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
-            'work_email' => 'required|string|email|max:255|unique:users,work_email,NULL,id,deleted_at,NULL',
+            'work_email' => 'nullable|string|email|max:255|unique:users,work_email,NULL,id,deleted_at,NULL',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'g-recaptcha-response' => ['required', new Recaptcha()],
             'privacy_policy' => 'required',
-        ],[   
+        ],[
             'email.required'    => 'Please Provide Your Personal Email For Better Communication, Thank You.',
             'email.unique'      => 'Sorry, This Personal Email Address Is Already Used By Another User. Please Try With Different One, Thank You.',
-            'work_email.required'    => 'Please Provide Your Work Email For Better Communication, Thank You.',
-            'work_email.unique'      => 'Sorry, This Work Email Address Is Already Used By Another User. Please Try With Different One, Thank You.',
+             // 'work_email.required'    => 'Please Provide Your Work Email For Better Communication, Thank You.',
+             // 'work_email.unique'      => 'Sorry, This Work Email Address Is Already Used By Another User. Please Try With Different One, Thank You.',
             'privacy_policy.required'      => 'Please check privacy policy checkbox.',
         ]);
 
@@ -80,7 +80,7 @@ class RegisteredUserController extends Controller
             'salt' => $salt,
         ]);
         event(new Registered($user)); */
-       
+
         $user = User::find($user->id);
         $user->sendEmailVerificationNotification();
 
