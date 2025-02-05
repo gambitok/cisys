@@ -7,6 +7,8 @@ import Select from 'react-select';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 
 export default function Form({ data, errors, setData, types, products, coupons }) {
+
+    console.log(data);
     const optionChanged = value => setData("role_id", value.value);
     const typeval = types.find(obj => obj.value === data.role_id);
 
@@ -106,10 +108,10 @@ export default function Form({ data, errors, setData, types, products, coupons }
                 </div>
                 <div className='col-md-6'>
                     <div className="mb-3">
-                        <InputLabel value="Standalone Surcharge" />
+                        <InputLabel value="Standalone Surcharge  (e.g. 40%...)" />
                         <TextInput
                             id="standalone"
-                            value={data.standalone}
+                            value={data.standalone ?? 0}
                             onChange={(e) => setData('standalone', e.target.value)}
                             type="number"
                             className="mt-1 block w-full form-control"

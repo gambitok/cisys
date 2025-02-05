@@ -12,7 +12,7 @@ export default function Index(props) {
         name: props.plan.name || "",
         qty: props.plan.qty || "",
         price: props.plan.price || "",
-        standalone: props.plan.standalone || "",
+        standalone: props.plan.standalone || 0,
         standalone_status: props.plan.standalone_status !== undefined ? props.plan.standalone_status : 0,
     });
 

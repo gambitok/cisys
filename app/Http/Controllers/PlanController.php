@@ -116,7 +116,7 @@ class PlanController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -124,6 +124,7 @@ class PlanController extends Controller
 
         $data = $request->all();
         $data['user_id'] = auth()->id();
+        $data['standalone'] = $data['standalone'] ?? 0;
 
         Plan::create($data);
 
@@ -170,7 +171,7 @@ class PlanController extends Controller
             'plan'      => $plan,
             'types'     => $types,
             'products'  => $products,
-            'coupons'  => $coupons,
+            'coupons'   => $coupons,
         ]);
     }
 
@@ -192,6 +193,8 @@ class PlanController extends Controller
             'standalone_status' => 'nullable|boolean',
         ]);
 
+        $validated['standalone'] = $validated['standalone'] ?? 0;
+
         $plan->update($validated);
 
         return redirect()->route('plans.index')->with('success', 'Plan updated successfully!');
@@ -212,12 +215,12 @@ class PlanController extends Controller
     public function settingValidation($request): void
     {
         $this->validate($request, [
-            'product_id'    => 'required',
-            'role_id'       => 'required',
-            'name'          => 'required',
-            'qty'           => 'required',
-            'price'         => 'required',
-            'standalone' => 'required|numeric',
+            'product_id'    => 'required|integer',
+            'role_id'       => 'required|integer',
+            'name'          => 'required|string|max:255',
+            'qty'           => 'required|integer',
+            'price'         => 'required|numeric',
+            'standalone' => 'required|numeric|min:0',
             'standalone_status' => 'nullable|integer',
             'coupon_id'     => new PlanCheckCouponIsApplyableOrNot($request),
             '*'             => new NoSpecialChars,
@@ -227,7 +230,7 @@ class PlanController extends Controller
     protected function customMessages(): array
     {
         return [
-            'standalone.gte' => 'The standalone field cannot less than 0.',
+            'standalone.gte' => 'The standalone field cannot be less than 0.',
         ];
     }
 

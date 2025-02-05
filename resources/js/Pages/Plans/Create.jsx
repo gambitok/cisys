@@ -3,9 +3,8 @@ import Authenticated from '@/Layouts/Authenticated';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import Form from '@/Pages/Plans/Form';
 
-
 export default function Create(props) {
-    
+
     const { data, setData, errors, post } = useForm({
         "product_id": "",
         "role_id": "",
@@ -13,15 +12,14 @@ export default function Create(props) {
         "name": "",
         "qty": "",
         "price": "",
-        "standalone": "",
-
+        "standalone": 0,
     });
 
     function handleSubmit(e) {
         e.preventDefault();
         post(route("plans.store"));
     }
-    
+
     return (
         <Authenticated
             props={props}
