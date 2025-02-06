@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Coupon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -114,8 +115,11 @@ class LicenseController extends Controller{
             $transaction_id_gen .= $characters[mt_rand(0, 61)];
 
         $transaction_id = $request->plan_id.'_'.$transaction_id_gen;
+        Log::info('Request data:', $request->all());
+        $couponCode = $request->input('couponcode');
+        $customclients = $request->input('customclients');
 
-        $this->createLicense($request->plan_id, $payment_type = 1, $transaction_id, $request->expiry_year);
+        $this->createLicense($request->plan_id, $payment_type = 1, $transaction_id, $request->expiry_year, 0, $couponCode, '', $customclients);
 
         return redirect()->route('licenses.index')->with('success', 'License purchased successfully!');
     }

@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Auth;
 
-class Product extends Model{
-    use HasFactory;
-    use SoftDeletes;
-    
+class Product extends Model
+{
+
+    use HasFactory, SoftDeletes;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -18,14 +19,24 @@ class Product extends Model{
      */
     protected $guarded = [];
 
-    protected static function boot(){
+    protected static function boot()
+    {
         parent::boot();
+
         static::addGlobalScope('user', function ($query) {
-            $user = Auth::user();            
+            $user = Auth::user();
             if ($user && $user->role_id > 1) {
                 $query->where('user_id', $user->id);
             }
         });
+    }
+
+    /**
+     * Get the plans for the product.
+     */
+    public function plans()
+    {
+        return $this->hasMany(Plan::class);
     }
 
 }

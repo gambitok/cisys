@@ -9,7 +9,6 @@ import TextInput from '@/Components/TextInput';
 import Checkbox from '@/Components/Checkbox';
 
 export default function Create(props) {
-    console.log(props.plans);
     const [clients, setClients] = useState("-");
     const [productname, setProductname] = useState("");
     const [pricing, setPricing] = useState("-");
@@ -23,7 +22,7 @@ export default function Create(props) {
     const [standalone, setStandalone] = useState(false);
     const [standalonetot, setStandalonetot] = useState("-");
     const [serverqty, setServerqty] = useState(0);
-    const [standalone_status, setStandaloneStatus] = useState(0); // New state for standalone_status
+    const [standalone_status, setStandaloneStatus] = useState(0);
 
     const yearOptions = [];
     for (let i = 1; i < 16; i++) {
@@ -34,6 +33,7 @@ export default function Create(props) {
         plan_id: "",
         expiry_year: 1,
         customclients: 1,
+        couponcode: ""
     });
 
     const yearValue = yearOptions.find(obj => obj.value === data.expiry_year);
@@ -49,7 +49,7 @@ export default function Create(props) {
         var sendcouponplan = '';
         var sendcustomclients = plan.qty;
         setStandaloneval(plan.standalone);
-        setStandaloneStatus(plan.standalone_status); // Set standalone_status from plan
+        setStandaloneStatus(plan.standalone_status);
         const newData = { ...data };
         newData.plan_id = value.value;
         newData.customclients = sendcustomclients;
@@ -88,6 +88,7 @@ export default function Create(props) {
 
     const couponCheckCode = value => {
         setCouponcode(value);
+        setData('couponcode', value);
         changeTotal(data.plan_id, data.expiry_year, data.customclients, value);
     };
 

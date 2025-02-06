@@ -32,15 +32,18 @@ class Plan extends Model
      */
     protected $guarded = [];
 
-    public function role() {
+    public function role()
+    {
         return $this->belongsTo(Role::class);
     }
 
-    public function product() {
-        return $this->belongsTo(Product::class);
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
-    public function coupon() {
+    public function coupon()
+    {
         return $this->belongsTo(Coupon::class);
     }
 
