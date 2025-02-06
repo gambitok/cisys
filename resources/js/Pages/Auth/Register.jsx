@@ -5,7 +5,7 @@ import Input from '@/Components/Input';
 import Label from '@/Components/Label';
 import ValidationErrors from '@/Components/ValidationErrors';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
-import ReCAPTCHA from "react-google-recaptcha"; 
+import ReCAPTCHA from "react-google-recaptcha";
 import config from '../../config';
 import Checkbox from '@/Components/Checkbox';
 
@@ -31,7 +31,7 @@ export default function Register(props) {
     };
 
     const captcha = useRef(null);
-    
+
     const submit = (e) => {
         captcha.current.reset();
         e.preventDefault();
@@ -53,7 +53,7 @@ export default function Register(props) {
 
             <form onSubmit={submit}>
                 <div>
-                    <Label forInput="name" value="Name" />
+                    <Label forInput="name" value="Name" required />
 
                     <Input
                         type="text"
@@ -63,12 +63,12 @@ export default function Register(props) {
                         autoComplete="name"
                         isFocused={true}
                         handleChange={onHandleChange}
-                        
+
                     />
                 </div>
 
                 <div className="mt-4">
-                    <Label forInput="email" value="Personal Email" />
+                    <Label forInput="email" value="Personal Email" required />
 
                     <Input
                         type="email"
@@ -77,7 +77,7 @@ export default function Register(props) {
                         className="mt-1 block w-full"
                         autoComplete="username"
                         handleChange={onHandleChange}
-                        
+
                     />
                 </div>
 
@@ -91,12 +91,12 @@ export default function Register(props) {
                         className="mt-1 block w-full"
                         autoComplete="username"
                         handleChange={onHandleChange}
-                        
+
                     />
                 </div>
 
                 <div className="mt-4">
-                    <Label forInput="password" value="Password" />
+                    <Label forInput="password" value="Password" required />
 
                     <Input
                         type="password"
@@ -105,12 +105,12 @@ export default function Register(props) {
                         className="mt-1 block w-full"
                         autoComplete="new-password"
                         handleChange={onHandleChange}
-                        
+
                     />
                 </div>
 
                 <div className="mt-4">
-                    <Label forInput="password_confirmation" value="Confirm Password" />
+                    <Label forInput="password_confirmation" value="Confirm Password" required />
 
                     <Input
                         type="password"
@@ -118,7 +118,7 @@ export default function Register(props) {
                         value={data.password_confirmation}
                         className="mt-1 block w-full"
                         handleChange={onHandleChange}
-                        
+
                     />
                 </div>
 
