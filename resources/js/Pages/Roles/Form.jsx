@@ -7,7 +7,7 @@ import { Head, Link, useForm } from '@inertiajs/inertia-react';
 
 
 export default function Form({ data,errors,setData,permissions,rolemanage }) {
-    
+
     /* const handleChange = (e) => {
         let id = parseInt(e.target.value);
         e.target.checked
@@ -49,14 +49,14 @@ export default function Form({ data,errors,setData,permissions,rolemanage }) {
         </div>
 
         <div className="mb-3">
-            
+
             <table className="table">
                 <thead>
                     <tr>
                         <th scope="col">Permission</th>
-                        <th scope="col" className="text-center">No access</th>
-                        <th scope="col" className="text-center">Read only</th>
-                        <th scope="col" className="text-center">Full control</th>
+                        <th scope="col" className="text-center">None</th>
+                        <th scope="col" className="text-center">Read</th>
+                        <th scope="col" className="text-center">Read/Write</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,7 +74,7 @@ export default function Form({ data,errors,setData,permissions,rolemanage }) {
                                         &nbsp;&nbsp;&nbsp;&nbsp;- {submenu.name}
                                     </td>
                                     <td className="text-center">
-                                        <label> 
+                                        <label>
                                             <input
                                                 type="radio"
                                                 value="0"
@@ -106,7 +106,7 @@ export default function Form({ data,errors,setData,permissions,rolemanage }) {
                             ))}
                         </>
                     ))}
-                    
+
                 </tbody>
             </table>
 
@@ -114,7 +114,7 @@ export default function Form({ data,errors,setData,permissions,rolemanage }) {
                 {permissions.map((item,key) => (
                     <div className='col-md-3'>
                         <label className="flex items-center">
-                            
+
                             <Checkbox name="permissions[]" value={item.id} handleChange={handleChange} checked={checkboxvaluechecked(item.id)} />
 
                             <span className="ml-2 text-sm text-gray-600">{item.name}</span>
@@ -123,8 +123,8 @@ export default function Form({ data,errors,setData,permissions,rolemanage }) {
                 ))}
             </div> */}
 
-            
-            
+
+
 
         </div>
 
@@ -136,7 +136,7 @@ export default function Form({ data,errors,setData,permissions,rolemanage }) {
             </tr>
         ))} */}
 
-        
+
         <div className="mt-4 formsubmitbutton">
             <button
                 type="submit"

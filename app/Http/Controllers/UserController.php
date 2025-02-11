@@ -24,16 +24,26 @@ class UserController extends Controller
         $o = $request->input('o', 'DESC');
         $ob = $request->input('ob', 'id');
 
-        $users = User::with('role');
+        $currentUser = Auth::user();
+        $usersQuery = User::with('role');
+
+        if ($currentUser->role_id === 1) {
+            $usersQuery = User::with('role');
+        } elseif ($currentUser->role_id === 14) {
+            $managedUserIds = $currentUser->managedUsers()->pluck('id')->push($currentUser->id);
+            $usersQuery = User::whereIn('id', $managedUserIds)->with('role');
+        } elseif ($currentUser->role_id === 16) {
+            $usersQuery = User::where('id', $currentUser->id)->with('role');
+        }
 
         if (!empty($s)) {
-            $users = $users->where(function($query) use ($s) {
+            $usersQuery = $usersQuery->where(function($query) use ($s) {
                 $query->where('name', 'LIKE', '%' . $s . '%')
                     ->orWhere('email', 'LIKE', '%' . $s . '%');
             });
         }
 
-        $users = $users->orderBy($ob, $o)->paginate(env('PAGINATE_NO_OF_ROWS'));
+        $users = $usersQuery->orderBy($ob, $o)->paginate(env('PAGINATE_NO_OF_ROWS'));
         $users->appends($request->except(['page']));
 
         return Inertia::render('Users/Index', [
@@ -57,9 +67,10 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'name' => 'required|min:4',
+            'title' => 'required|min:4',
             'email' => 'required|email|unique:users,email',
-            'username' => 'required|regex:/^[a-zA-Z0-9_.-]+$/|unique:users,username',
+            'username' => 'required|regex:/^[a-zA-Z0-9_.-]+$/|unique:users,username|min:4',
             'password' => 'required',
             'role_id' => 'required',
             '*' => new NoSpecialChars,
@@ -97,7 +108,7 @@ class UserController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:users,email,' . $id,
-            'username' => 'required|regex:/^[a-zA-Z0-9_.-]+$/|unique:users,username,' . $id,
+            'username' => 'required|regex:/^[a-zA-Z0-9_.-]+$/|unique:users,username,' . $id . '|min:4',
             '*' => new NoSpecialChars,
         ]);
 

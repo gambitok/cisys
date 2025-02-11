@@ -14,11 +14,11 @@ use App\Models\Product;
 use App\Models\Coupon;
 use App\Models\CouponLog;
 use App\Models\Transaction;
-use App\Models\User;
 use App\Models\Role;
 use App\Models\Plan;
 use Arr;
 use Hash;
+use Auth;
 
 class DashboardController extends Controller
 {
@@ -107,9 +107,12 @@ class DashboardController extends Controller
         }
 
         if (isset($permissions['roles']['users']) && $permissions['roles']['users'] == 2) {
+            $currentUser = Auth::user();
+            $usersCount = $currentUser->getUsersByRole()->count();
+
             $dataStastics[] = [
                 'name' => 'Users',
-                'count' => User::count(),
+                'count' => $usersCount,
                 'icon' => 'bi bi-people-fill',
                 'link' => route('users.index'),
             ];

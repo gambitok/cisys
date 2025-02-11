@@ -210,12 +210,12 @@ export default function Index(props) {
 
             {RoleManageArray.roles.clients == 2 && (
                 <div className="flex items-center justify-between mb-6 float-end create-button-listing">
-                    <a className="btn btn-danger waves-effect waves-light mr-5" href='javascript:void(0)' onClick={deleteCheckBoxValided}>
-                        Delete Clients
-                    </a>
                     <a className="btn btn-success waves-effect waves-light mr-5" href='javascript:void(0)'
                        onClick={settingCheckBoxValided}>
                         Bind Setting ID
+                    </a>
+                    <a className="btn btn-danger waves-effect waves-light mr-5" href='javascript:void(0)' onClick={deleteCheckBoxValided}>
+                        Delete Clients
                     </a>
                     <a className="btn btn-primary waves-effect waves-light" href='javascript:void(0)'
                        onClick={checkBoxValided}>
