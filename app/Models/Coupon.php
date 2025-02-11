@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\RoleScope;
 
-class Coupon extends Model{
-    use HasFactory;
-    use SoftDeletes;
+class Coupon extends Model
+{
+
+    use HasFactory, SoftDeletes, RoleScope;
 
     /**
      * The attributes that are mass assignable.
@@ -16,15 +18,17 @@ class Coupon extends Model{
      * @var array
      */
     protected $guarded = [];
-    
-    public function role() {
+
+    public function role()
+    {
         return $this->belongsTo(Role::class);
     }
 
-    public function couponLog() {
+    public function couponLog()
+    {
         return $this->hasOne(CouponLog::class)->oldestOfMany();
     }
-    
+
     public function scopeWithCommentCount($query)
     {
         return $query->addSelect([

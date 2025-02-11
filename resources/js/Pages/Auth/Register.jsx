@@ -53,7 +53,7 @@ export default function Register(props) {
 
             <form onSubmit={submit}>
                 <div>
-                    <Label forInput="name" value="Name" required />
+                    <Label forInput="name" value="Username" required />
 
                     <Input
                         type="text"

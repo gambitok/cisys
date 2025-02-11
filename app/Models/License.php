@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
+use App\Traits\UserScope;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class License extends Model{
-    use HasFactory;
-    
+class License extends Model
+{
+    use HasFactory, UserScope;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -16,23 +19,24 @@ class License extends Model{
      */
     protected $guarded = [];
 
-    protected static function boot(){
-        parent::boot();
-        static::addGlobalScope('user', function ($query) {
-            $user = Auth::user();            
-            if ($user && $user->role_id > 1) {
-                $query->where('user_id', $user->id);
-            }
-        });
+    public function manager(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'parent_id');
     }
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-    public function product() {
+
+    public function product()
+    {
         return $this->belongsTo(Product::class);
     }
-    public function transaction(){
+
+    public function transaction()
+    {
         return $this->belongsTo(Transaction::class, 'transaction_id', 'transaction_id');
     }
+
 }

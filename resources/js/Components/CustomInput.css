@@ -1,0 +1,11 @@
+.input-box {
+    width: 150px;
+    height: 30px;
+    transition: all 0.3s ease;
+}
+
+.input-box:focus,
+.input-box:hover {
+    width: 400px;
+    height: 60px;
+}

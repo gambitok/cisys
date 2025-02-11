@@ -50,7 +50,7 @@ return [
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'db_cisys_portal'),
             'username' => env('DB_USERNAME', 'cisys_portal'),
-            'password' => env('DB_PASSWORD', '7syW^k745'),
+            'password' => env('DB_PASSWORD', 'p8H2h3v2Pmpuxj$iG'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8',
              'collation' => 'utf8_unicode_ci',

@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-use App\Rules\NoSpecialChars;
 use App\Models\Setting;
 use App\Models\Group;
 use App\Models\Client;
@@ -20,7 +19,6 @@ use App\Models\Role;
 use App\Models\Plan;
 use Arr;
 use Hash;
-use App\Http\Controllers\UserController;
 
 class DashboardController extends Controller
 {
@@ -29,12 +27,11 @@ class DashboardController extends Controller
      *
      * @return Response
      */
-    public function index(Request $request){
-
-        
+    public function index(Request $request)
+    {
         $userController = new UserController;
         $permissions = $userController->checkRoleGetApi($request);
-        
+
         $dataStastics = [];
 
         if (isset($permissions['roles']['settings']) && $permissions['roles']['settings'] == 2) {
@@ -43,9 +40,9 @@ class DashboardController extends Controller
                 'count' => Setting::count(),
                 'icon' => 'bi bi-gear-wide-connected',
                 'link' => route('settings.index'),
-            ];    
+            ];
         }
-        
+
         if (isset($permissions['roles']['groups']) && $permissions['roles']['groups'] == 2) {
             $dataStastics[] = [
                 'name' => 'Groups',
@@ -96,7 +93,7 @@ class DashboardController extends Controller
                 'name' => 'Used Coupons',
                 'count' => CouponLog::count(),
                 'icon' => 'bi bi-list-check',
-                'link' => route('coupons.index'),
+                'link' => route('coupon-history.index'),
             ];
         }
 
@@ -108,7 +105,7 @@ class DashboardController extends Controller
                 'link' => route('transactions.index'),
             ];
         }
-        
+
         if (isset($permissions['roles']['users']) && $permissions['roles']['users'] == 2) {
             $dataStastics[] = [
                 'name' => 'Users',
@@ -126,7 +123,7 @@ class DashboardController extends Controller
                 'link' => route('roles.index'),
             ];
         }
-        
+
         if (isset($permissions['roles']['plans']) && $permissions['roles']['plans'] == 2) {
             $dataStastics[] = [
                 'name' => 'Package',
@@ -135,11 +132,8 @@ class DashboardController extends Controller
                 'link' => route('plans.index'),
             ];
         }
-        
-        
-        
+
         return Inertia::render('Dashboard', ['datastastics' => $dataStastics]);
     }
-  
-    
+
 }

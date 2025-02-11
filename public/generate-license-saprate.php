@@ -1,5 +1,6 @@
 <?php
-    function generateServerID($getlicense,$server_id,$server = 0){
+    function generateServerID($getlicense, $server_id, $server = 0)
+    {
 
         $responsejson = [
             'success' => 1,
@@ -15,7 +16,7 @@
             $responsejson['message'] = 'socket_create(): failed reason: '.socket_strerror(socket_last_error());
             return $responsejson;
         }
-        
+
         $conn = socket_connect($socket, 'nsa.myds.me', 41357);
         if ($conn === false) {
             $responsejson['success'] = 0;
@@ -24,7 +25,8 @@
         }
 
         // generate request token
-        $otp = date('Ymd-Hi')."-"."f298fh823989e8923d823r98jhrt23";
+        $salt = "qxUWXMdruUbfJ8XoFSda2g2rHR1f3jQy";
+        $otp = date('Ymd-Hi')."-".$salt;
         $token = substr(hash('sha256', $otp), 0, 16);
 
         // sent request to SCM server
@@ -35,17 +37,16 @@
             $serverid .= $characters[mt_rand(0, 61)]; */
 
         $serverid = $server_id;
-        
-        $ts = date('Y-m-d H:i:s');
+
+        // $ts = date('Y-m-d H:i:s');
         // $request_content = '{"Timestamp": '.$ts.', "Version": "CICBv2", "Type": "Retail", "Server_id": '.$serverid.', "PRODUCT": '.$getlicense['plan_name'].', "SID": '.$serverid.', "PID": '.$getlicense['plan_id'].', "LID": '.$getlicense['id'].', "QTY": '.$getlicense['device_count'].', "TID": '.$getlicense['transaction_id'].', "DEBUG": "1"}';
-        
+
         $request_content = '{"PRODUCT": "'.$getlicense['plan_name'].'", "SID": "'.$serverid.'", "PID": "'.$getlicense['plan_id'].'", "LID": "'.$getlicense['id'].'", "QTY": "'.$getlicense['device_count'].'", "YR": "'.$getlicense['expiry_year'].'", "TID": "'.$getlicense['transaction_id'].'", "DEBUG": "1"}';
-        
+
         $outbound = $token."|".$request_content;
         $sent = socket_write($socket, $outbound, strlen($outbound));
-            
+
         // receive signed certificate from SCM server
-        $inbound = '';
         $cert = '';
 
         if ($server) {
@@ -56,8 +57,7 @@
             }
         }
 
-        
-        if($socket){
+        if ($socket) {
             // close socket
             socket_shutdown($socket, 2);
             socket_close($socket);
@@ -71,19 +71,18 @@
             fwrite($fp, substr(str_replace('<br>', '', $cert), 4));
             fclose($fp);
 
-
             $data = [
                 'success' => 1,
                 'server_id' => $serverid,
                 'server_file_cer' => 'uploads/signed-certificate/'.$signedcerfile,
             ];
-        }else{
+        } else {
             $data = [
                 'success' => 0,
-                'message' => 'failed! Reason: Some issue for server side please try after some time!'
+                'message' => 'failed! Reason: Some issue for server side please try after some time!' . $token
             ];
         }
-        
+
         return $data;
     }
 
@@ -91,9 +90,9 @@
     if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1') {
         $server = 0;
         $mysqli = new mysqli('localhost', 'root', '', 'cyberintelsystems-react');
-    }else{
+    } else {
         $server = 1;
-        $mysqli = new mysqli('localhost', 'cisys_portal', '7syW^k745', 'db_cisys_portal');
+        $mysqli = new mysqli('216.225.199.115', 'cisys_portal', 'p8H2h3v2Pmpuxj$iG', 'db_cisys_portal');
     }
 
     if ($mysqli->connect_errno) {
@@ -102,22 +101,22 @@
         echo json_encode($responsejson);
         exit;
     }
-    
+
     if (isset($_POST['license_id']) && isset($_POST['server_id'])) {
-        
+
         $license_id = $_POST['license_id'];
         $server_id = $_POST['server_id'];
-        
+
         $attempts = 1;
-        
-        while($attempts < 3){
+
+        while($attempts < 3) {
 
             $result = $mysqli->query("SELECT * FROM licenses lc LEFT JOIN transactions tr ON(lc.transaction_id = tr.transaction_id) where lc.id = ".$license_id."");
-            
+
             if ($result->num_rows > 0) {
                 $getlicense = $result->fetch_assoc();
                 $response = generateServerID($getlicense,$server_id,$server);
-            }else{
+            } else {
                 $response = [
                     'success' => 0,
                     'message' => 'License not found!'
@@ -136,7 +135,7 @@
             $responsejson['server_file_cer'] = $response['server_file_cer'];
             echo json_encode($responsejson);
             exit;
-        }else{
+        } else {
             $responsejson['success'] = 0;
             $responsejson['license_id'] = $license_id;
             $responsejson['server_id'] = $server_id;
@@ -145,7 +144,7 @@
             exit;
         }
 
-    }else{
+    } else {
         $responsejson['success'] = 0;
         $responsejson['message'] = "license_id or server_id not found!";
         echo json_encode($responsejson);

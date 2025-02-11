@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
+use App\Traits\UserScope;
 
 class Client extends Model
 {
 
-    use HasFactory;
+    use HasFactory, UserScope;
 
     /**
      * The attributes that are mass assignable.
@@ -17,17 +18,6 @@ class Client extends Model
      * @var array
      */
     protected $guarded = [];
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::addGlobalScope('user', function ($query) {
-            $user = Auth::user();
-            if ($user && $user->role_id > 1) {
-                $query->where('user_id', $user->id);
-            }
-        });
-    }
 
     public function user()
     {
