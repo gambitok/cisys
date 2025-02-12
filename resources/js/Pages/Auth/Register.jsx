@@ -63,7 +63,6 @@ export default function Register(props) {
                         autoComplete="name"
                         isFocused={true}
                         handleChange={onHandleChange}
-
                     />
                 </div>
 
@@ -77,7 +76,6 @@ export default function Register(props) {
                         className="mt-1 block w-full"
                         autoComplete="username"
                         handleChange={onHandleChange}
-
                     />
                 </div>
 
@@ -91,7 +89,6 @@ export default function Register(props) {
                         className="mt-1 block w-full"
                         autoComplete="username"
                         handleChange={onHandleChange}
-
                     />
                 </div>
 
@@ -118,7 +115,6 @@ export default function Register(props) {
                         value={data.password_confirmation}
                         className="mt-1 block w-full"
                         handleChange={onHandleChange}
-
                     />
                 </div>
 
@@ -129,7 +125,6 @@ export default function Register(props) {
                         <span className="ml-2 text-sm text-gray-600">I have read and agree to the Privacy Policy</span>
                     </label>
                 </div>
-
 
                 <div className='mt-3' style={{textAlign: "-webkit-center"}}>
                     <ReCAPTCHA

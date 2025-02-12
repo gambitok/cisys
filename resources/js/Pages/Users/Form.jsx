@@ -7,19 +7,20 @@ import Toggle from 'react-bootstrap-toggle';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 
 export default function Form({ data,errors,setData,roles }) {
-    
-    
+
     const optionChanged = value => {
         setData("role_id",value.value);
     };
+
     const rolesval = roles.find(obj => {
         return obj.value === data.role_id;
     });
-    
+
     function onToggle() {
         setData("status",!data.status);
     }
-    function refreshKey(){        
+
+    function refreshKey(){
         $.ajax({
             url: route("user-genreate-key",data.user_id),
             success: function(result){
@@ -29,6 +30,7 @@ export default function Form({ data,errors,setData,roles }) {
             }
         });
     }
+
     function copyGenreateKey(){
         var $temp = $("<input>");
         $("body").append($temp);
@@ -41,8 +43,6 @@ export default function Form({ data,errors,setData,roles }) {
 
     return (
        <>
-
-
         <div className='row g-3 my-2'>
             <div className='col-md-6'>
                 <div className="mb-3">
@@ -73,7 +73,6 @@ export default function Form({ data,errors,setData,roles }) {
                 </div>
             </div>
         </div>
-
         <div className='row g-3 my-2'>
             <div className='col-md-6'>
                 <div className="mb-3">
@@ -118,7 +117,6 @@ export default function Form({ data,errors,setData,roles }) {
                 </div>
             </div>
         </div>
-
         <div className='row g-3 my-2'>
             <div className='col-md-6'>
                 <div className="mb-3">
@@ -135,10 +133,8 @@ export default function Form({ data,errors,setData,roles }) {
                 </div>
             </div>
             <div className='col-md-6'>
-
                 <div className="mb-3">
                     <InputLabel value="Role" />
-                    
                     <Select
                         className="basic-single"
                         classNamePrefix="select"
@@ -195,14 +191,11 @@ export default function Form({ data,errors,setData,roles }) {
                             <i className='bi bi-clipboard2-pulse fs-6'></i> Copy PAT
                         </div>
                         <div className='alert alert-light' id='genreate-key-success' style={{display:"none"}}></div>
-                        
+
                     </div>
                 </div>)
             }
-            
         </div>
-        
-        
         <div className='row g-3 my-2'>
             <div className='col-md-6'>
                 <div className="mt-4 formsubmitbutton">
@@ -223,7 +216,6 @@ export default function Form({ data,errors,setData,roles }) {
             <div className='col-md-6'>
                 <div className="mb-3" style={{float:"right"}}>
                     <InputLabel value="Active" />
-                    
                     <Toggle
                         onClick={onToggle}
                         on={<span>Yes</span>}
@@ -237,9 +229,7 @@ export default function Form({ data,errors,setData,roles }) {
                     />
                 </div>
             </div>
-            
         </div>
-        
        </>
     );
 }

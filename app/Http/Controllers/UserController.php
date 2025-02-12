@@ -77,7 +77,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()->withErrors($validator)->withInput()->with('error', 'Error data validation!');
         }
 
         $data = $request->all();

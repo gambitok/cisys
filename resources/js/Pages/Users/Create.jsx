@@ -3,9 +3,8 @@ import Authenticated from '@/Layouts/Authenticated';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import Form from '@/Pages/Users/Form';
 
-
 export default function Create(props) {
-    
+
     const { data, setData, errors, post } = useForm({
         name: "",
         title: "",
@@ -16,7 +15,7 @@ export default function Create(props) {
         role_id: "",
         status: "",
         api_key: "",
-        user_id: 0,
+        // user_id: 0,
     });
 
     function handleSubmit(e) {
@@ -32,9 +31,6 @@ export default function Create(props) {
             header={'Create User'}
             headtitle={'Create User'}
         >
-            
-            
-            
 
             <form name="createForm" onSubmit={handleSubmit}>
 
@@ -42,8 +38,6 @@ export default function Create(props) {
 
             </form>
 
-                        
-            
         </Authenticated>
     );
 }

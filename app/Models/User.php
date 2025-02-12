@@ -37,7 +37,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * The attributes that should be cast.
      *
-     * @var array<string, string>
+     * @var array<string, string>dashboard
      */
     protected $casts = [
         'email_verified_at' => 'datetime',

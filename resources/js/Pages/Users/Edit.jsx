@@ -32,15 +32,12 @@ export default function Index(props) {
             headtitle={'Edit User'}
         >
 
-
             <form name="createForm" onSubmit={handleSubmit}>
-                
+
                 <Form data={data} errors={errors} setData={setData} roles={props.roles} />
 
             </form>
 
-                        
-            
         </Authenticated>
     );
 }
