@@ -32,9 +32,17 @@ export default function ScreenData({ data,errors,setData }) {
             newData['right_text_'+screenid] = 'DEMO';
             newData['banner_color_'+screenid] = '#ff0000';
             newData['text_color_'+screenid] = '#ffffff';
-            newData['alarm_code_'+screenid] = 0;
             newData['info_checks_'+screenid] = information_display;
+            newData['alarm_code_'+screenid] = 0;
             newData['alarm_message_'+screenid] = '';
+            newData['alarm_height_'+screenid] = 20;
+            newData['alarm_border_'+screenid] = 5;
+            newData['alarm_color_'+screenid] = '#ff0000';
+            newData['alarm_text_size_'+screenid] = 0;
+            newData['alarm_heartbeat_'+screenid] = 0;
+            newData['alarm_center_text_'+screenid] = 'CYBER INTEL SYSTEMS';
+            newData['alarm_right_text_'+screenid] = 'DEMO';
+            newData['alarm_text_color_'+screenid] = '#ffffff';
             setData(newData);
         }
     }
@@ -48,7 +56,6 @@ export default function ScreenData({ data,errors,setData }) {
 
     return (
         <>
-
             {Array.from(
                 Array(data.screen), (v,i) =>
                 <div id={'screenFrom-'+(i+1)} style={{display: data.screenselect==i+1 ? "":"none"}}>
@@ -70,9 +77,7 @@ export default function ScreenData({ data,errors,setData }) {
 
                     <div className='row g-3 my-2'>
                         <div className='col-md-6'>
-
                             <div className='row'>
-
                                 <div className='col-md-4'>
                                     <div className="mb-3">
                                         <InputLabel htmlFor={'banner_height_'+(i+1)} value="Banner Height (px)" />
@@ -85,7 +90,6 @@ export default function ScreenData({ data,errors,setData }) {
                                             autoComplete="current-banner_height"
                                             placeholder="Banner Height (px)"
                                         />
-
                                          <InputError message={errors['banner_height_'+(i+1)]} className="mt-2" />
                                     </div>
                                 </div>
@@ -102,9 +106,7 @@ export default function ScreenData({ data,errors,setData }) {
                                             autoComplete="current-banner_border"
                                             placeholder="Banner Height (px)"
                                         />
-
                                         <InputError message={errors['banner_border_'+(i+1)]} className="mt-2" />
-
                                     </div>
                                 </div>
 
@@ -120,16 +122,12 @@ export default function ScreenData({ data,errors,setData }) {
                                             autoComplete="current-banner_color"
                                             placeholder="Banner Color"
                                         />
-
                                         <InputError message={errors['banner_color_'+(i+1)]} className="mt-2" />
-
                                     </div>
                                 </div>
-
                             </div>
 
                             <div className='row'>
-
                                 <div className='col-md-4'>
                                     <div className="mb-3">
                                         <InputLabel htmlFor={'center_text_'+(i+1)} value="Center Text" />
@@ -142,9 +140,7 @@ export default function ScreenData({ data,errors,setData }) {
                                             autoComplete="current-center_text"
                                             placeholder="Center Text"
                                         />
-
                                         <InputError message={errors['center_text_'+(i+1)]} className="mt-2" />
-
                                     </div>
                                 </div>
 
@@ -161,7 +157,6 @@ export default function ScreenData({ data,errors,setData }) {
                                             placeholder="Right text"
                                         />
                                         <InputError message={errors['right_text_'+(i+1)]} className="mt-2" />
-
                                     </div>
                                 </div>
 
@@ -178,14 +173,11 @@ export default function ScreenData({ data,errors,setData }) {
                                             placeholder="Text Color"
                                         />
                                         <InputError message={errors['text_color_'+(i+1)]} className="mt-2" />
-
                                     </div>
                                 </div>
-
                             </div>
 
                             <div className='row'>
-
                                 <div className='col-md-4'>
                                     <div className="mb-3">
                                         <InputLabel htmlFor={'text_size_'+(i+1)} value="Text Size (pt)" />
@@ -198,7 +190,6 @@ export default function ScreenData({ data,errors,setData }) {
                                             autoComplete="current-banner_height"
                                             placeholder="Text Size (pt)"
                                         />
-
                                          <InputError message={errors['text_size_'+(i+1)]} className="mt-2" />
                                     </div>
                                 </div>
@@ -215,20 +206,14 @@ export default function ScreenData({ data,errors,setData }) {
                                             autoComplete="current-banner_border"
                                             placeholder="Hearbeat (seconds)"
                                         />
-
                                         <InputError message={errors['hearbeat_'+(i+1)]} className="mt-2" />
-
                                     </div>
                                 </div>
-
                             </div>
-
                         </div>
 
                         <div className='col-md-6'>
-
                             <InputLabel value="Computer Information Display" />
-
                             <div className='row g-3 my-2'>
                                 {information_display.map((item) => (
                                     <div className='col-md-6'>
@@ -239,14 +224,15 @@ export default function ScreenData({ data,errors,setData }) {
                                     </div>
                                 ))}
                             </div>
-
                         </div>
                     </div>
+
+
 
                     <div className='row g-3 my-2'>
                         <div className='col-md-6'>
                             <div className="mb-3">
-                                <InputLabel htmlFor={'alarm_code_'+(i+1)} value="Alarm code" />
+                                <InputLabel htmlFor={'alarm_code_'+(i+1)} value="Alarm type" />
                                 <TextInput
                                     id={'alarm_code_'+(i+1)}
                                     value={data['alarm_code_'+(i+1)]}
@@ -254,11 +240,9 @@ export default function ScreenData({ data,errors,setData }) {
                                     type="number"
                                     className="mt-1 block w-full form-control"
                                     autoComplete="current-alarm_code"
-                                    placeholder="Alarm code"
+                                    placeholder="Alarm type"
                                 />
-
                                 <InputError message={errors['alarm_code_'+(i+1)]} className="mt-2" />
-
                             </div>
                         </div>
                         <div className='col-md-6'>
@@ -273,16 +257,150 @@ export default function ScreenData({ data,errors,setData }) {
                                     autoComplete="current-alarm_message"
                                     placeholder="Alarm message"
                                 />
-
                                 <InputError message={errors['alarm_message_'+(i+1)]} className="mt-2" />
-
                             </div>
                         </div>
                     </div>
 
+                    <div className='row g-3 my-2'>
+                        <div className='col-md-6'>
+                            <div className='row'>
+                                <div className='col-md-4'>
+                                    <div className="mb-3">
+                                        <InputLabel htmlFor={'alarm_height_'+(i+1)} value="Alarm Height (px)" />
+                                        <TextInput
+                                            id={'alarm_height_'+(i+1)}
+                                            value={data['alarm_height_'+(i+1)]}
+                                            onChange={(e) => setData('alarm_height_'+(i+1), e.target.value)}
+                                            type="number"
+                                            className="mt-1 block w-full form-control"
+                                            autoComplete="current-alarm_height"
+                                            placeholder="Alarm Height (px)"
+                                        />
+                                        <InputError message={errors['alarm_height_'+(i+1)]} className="mt-2" />
+                                    </div>
+                                </div>
+
+                                <div className='col-md-4'>
+                                    <div className="mb-3">
+                                        <InputLabel htmlFor={'alarm_border_'+(i+1)} value="Alarm Border (px)" />
+                                        <TextInput
+                                            id={'alarm_border_'+(i+1)}
+                                            value={data['alarm_border_'+(i+1)]}
+                                            onChange={(e) => setData('alarm_border_'+(i+1), e.target.value)}
+                                            type="number"
+                                            className="mt-1 block w-full form-control"
+                                            autoComplete="current-alarm_border"
+                                            placeholder="Alarm Border (px)"
+                                        />
+                                        <InputError message={errors['alarm_border_'+(i+1)]} className="mt-2" />
+                                    </div>
+                                </div>
+
+                                <div className='col-md-4'>
+                                    <div className="mb-3">
+                                        <InputLabel htmlFor={'alarm_color_'+(i+1)} value="Alarm Color" />
+                                        <TextInput
+                                            id={'alarm_color_'+(i+1)}
+                                            value={data['alarm_color_'+(i+1)]}
+                                            onChange={(e) => setData('alarm_color_'+(i+1), e.target.value)}
+                                            type="color"
+                                            className="mt-1 block w-full form-control"
+                                            autoComplete="current-alarm_color"
+                                            placeholder="Alarm Color"
+                                        />
+                                        <InputError message={errors['alarm_color_'+(i+1)]} className="mt-2" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className='row'>
+                                <div className='col-md-4'>
+                                    <div className="mb-3">
+                                        <InputLabel htmlFor={'alarm_center_text_'+(i+1)} value="Alarm Center Text" />
+                                        <TextInput
+                                            id={'alarm_center_text_'+(i+1)}
+                                            value={data['alarm_center_text_'+(i+1)]}
+                                            onChange={(e) => setData('alarm_center_text_'+(i+1), e.target.value)}
+                                            type="text"
+                                            className="mt-1 block w-full form-control"
+                                            autoComplete="current-alarm_center_text"
+                                            placeholder="Alarm Center Text"
+                                        />
+                                        <InputError message={errors['alarm_center_text_'+(i+1)]} className="mt-2" />
+                                    </div>
+                                </div>
+
+                                <div className='col-md-4'>
+                                    <div className="mb-3">
+                                        <InputLabel htmlFor={'alarm_right_text_'+(i+1)} value="Alarm Right text" />
+                                        <TextInput
+                                            id={'alarm_right_text_'+(i+1)}
+                                            value={data['alarm_right_text_'+(i+1)]}
+                                            onChange={(e) => setData('alarm_right_text_'+(i+1), e.target.value)}
+                                            type="text"
+                                            className="mt-1 block w-full form-control"
+                                            autoComplete="current-alarm_right_text"
+                                            placeholder="Alarm Right text"
+                                        />
+                                        <InputError message={errors['alarm_right_text_'+(i+1)]} className="mt-2" />
+                                    </div>
+                                </div>
+
+                                <div className='col-md-4'>
+                                    <div className="mb-3">
+                                        <InputLabel htmlFor={'alarm_text_color_'+(i+1)} value="Alarm Text Color" />
+                                        <TextInput
+                                            id={'alarm_text_color_'+(i+1)}
+                                            value={data['alarm_text_color_'+(i+1)]}
+                                            onChange={(e) => setData('alarm_text_color_'+(i+1), e.target.value)}
+                                            type="color"
+                                            className="mt-1 block w-full form-control"
+                                            autoComplete="current-alarm_text_color"
+                                            placeholder="Alarm Text Color"
+                                        />
+                                        <InputError message={errors['alarm_text_color_'+(i+1)]} className="mt-2" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className='row'>
+                                <div className='col-md-4'>
+                                    <div className="mb-3">
+                                        <InputLabel htmlFor={'alarm_text_size_'+(i+1)} value="Alarm Text Size (pt)" />
+                                        <TextInput
+                                            id={'alarm_text_size_'+(i+1)}
+                                            value={data['alarm_text_size_'+(i+1)]}
+                                            onChange={(e) => setData('alarm_text_size_'+(i+1), e.target.value)}
+                                            type="number"
+                                            className="mt-1 block w-full form-control"
+                                            autoComplete="current-alarm_text_size"
+                                            placeholder="Alarm Text Size (pt)"
+                                        />
+                                        <InputError message={errors['alarm_text_size_'+(i+1)]} className="mt-2" />
+                                    </div>
+                                </div>
+
+                                <div className='col-md-4'>
+                                    <div className="mb-3">
+                                        <InputLabel htmlFor={'alarm_heartbeat_'+(i+1)} value="Alarm Heartbeat (seconds)" />
+                                        <TextInput
+                                            id={'alarm_heartbeat_'+(i+1)}
+                                            value={data['alarm_heartbeat_'+(i+1)]}
+                                            onChange={(e) => setData('alarm_heartbeat_'+(i+1), e.target.value)}
+                                            type="number"
+                                            className="mt-1 block w-full form-control"
+                                            autoComplete="current-alarm_hearbeat"
+                                            placeholder="Alarm Heartbeat (seconds)"
+                                        />
+                                        <InputError message={errors['alarm_heartbeat_'+(i+1)]} className="mt-2" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             )}
-
         </>
     );
 }

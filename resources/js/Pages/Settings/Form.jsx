@@ -45,13 +45,14 @@ export default function Form({ data, errors, setData, permissions, users, role_i
             [e.target.name]: e.target.value
         })
     }
+
     function updateDataTab(tab_id) {
         setData('screenselect',tab_id);
     }
 
-    function loadField(){
+    // function loadField(){
 
-        var html = '';
+        // var html = '';
 
         /* html += '<div className="col-md-4"><div className="mb-3">';
             html += '<InputLabel htmlFor="banner_height" value="Banner Height (px)" />';
@@ -66,7 +67,7 @@ export default function Form({ data, errors, setData, permissions, users, role_i
         root.render(element); */
 
         // $('#screen-data').html('<InputLabel htmlFor="remark" value="Remark" />');
-    }
+    // }
 
     /* const optionChanged = value => {
         alert(value.value)
@@ -166,7 +167,7 @@ export default function Form({ data, errors, setData, permissions, users, role_i
                         <InputLabel htmlFor="screen" value="Screen#" />
                         <div style={{display: "inline"}}>
 
-                            <select class="form-select form-select mb-3" id="screen" name='screenselect' style={{width: "50%",display: "inline-block"}} onChange={updateData}>
+                            <select class="form-select mb-3" id="screen" name='screenselect' style={{width: "50%",display: "inline-block"}} onChange={updateData}>
                                 {Array.from(
                                     Array(data.screen), (v,i) =>
                                         <option value={i+1} selected={data.screenselect === i + 1}>Screen #{i+1}</option>

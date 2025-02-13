@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -11,10 +10,7 @@ use App\Rules\NoSpecialChars;
 use App\Models\Setting;
 use App\Models\SettingScreen;
 use App\Models\GeneralSetting;
-use App\Models\Permission;
-use App\Models\RoleHasPermission;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
 use Arr;
 use Hash;
 use Illuminate\Support\Facades\Auth;
@@ -109,8 +105,8 @@ class SettingController extends Controller
     {
         $this->settingValidation($request);
 
-        $user = auth()->user();
         $data = $request->all();
+        $user = auth()->user();
 
         if ($user->role_id === 1 && isset($data['selectedUser']) && $data['selectedUser'] !== '') {
             $userId = $data['selectedUser'];
@@ -124,20 +120,28 @@ class SettingController extends Controller
             'remark' => $data['remark'],
         ]);
 
-        for ($i=1; $i <= $data['screen']; $i++) {
+        for ($i = 1; $i <= $data['screen']; $i++) {
             SettingScreen::create([
                 'setting_id' => $setting->id,
-                'banner_height' => $data['banner_height_'.$i],
-                'text_size' => $data['text_size_'.$i],
-                'hearbeat' => $data['hearbeat_'.$i],
-                'banner_border' => $data['banner_border_'.$i],
-                'banner_color' => $data['banner_color_'.$i],
-                'center_text' => $data['center_text_'.$i],
-                'right_text' => $data['right_text_'.$i],
-                'text_color' => $data['text_color_'.$i],
-                'info_checks' => json_encode($data['info_checks_'.$i]),
+                'banner_height' => $data['banner_height_' . $i],
+                'text_size' => $data['text_size_' . $i],
+                'hearbeat' => $data['hearbeat_' . $i],
+                'banner_border' => $data['banner_border_' . $i],
+                'banner_color' => $data['banner_color_' . $i],
+                'center_text' => $data['center_text_' . $i],
+                'right_text' => $data['right_text_' . $i],
+                'text_color' => $data['text_color_' . $i],
+                'info_checks' => json_encode($data['info_checks_' . $i]),
                 'alarm_code' => $data['alarm_code_'.$i],
                 'alarm_message' => $data['alarm_message_'.$i],
+                'alarm_height' => $data['alarm_height_' . $i],
+                'alarm_border' => $data['alarm_border_' . $i],
+                'alarm_color' => $data['alarm_color_' . $i],
+                'alarm_center_text' => $data['alarm_center_text_' . $i],
+                'alarm_right_text' => $data['alarm_right_text_' . $i],
+                'alarm_text_color' => $data['alarm_text_color_' . $i],
+                'alarm_text_size' => $data['alarm_text_size_' . $i],
+                'alarm_heartbeat' => $data['alarm_heartbeat_' . $i],
             ]);
         }
 
@@ -170,10 +174,17 @@ class SettingController extends Controller
             $data['right_text_'.$row] = $value->right_text;
             $data['banner_color_'.$row] = $value->banner_color;
             $data['text_color_'.$row] = $value->text_color;
+            $data['info_checks_'.$row] = json_decode($value->info_checks,true);
             $data['alarm_code_'.$row] = $value->alarm_code;
             $data['alarm_message_'.$row] = $value->alarm_message;
-            $data['info_checks_'.$row] = json_decode($value->info_checks,true);
-
+            $data['alarm_height_'.$row] = $value->alarm_height;
+            $data['alarm_border_'.$row] = $value->alarm_border;
+            $data['alarm_color_'.$row] = $value->alarm_color;
+            $data['alarm_center_text_'.$row] = $value->alarm_center_text;
+            $data['alarm_right_text_'.$row] = $value->alarm_right_text;
+            $data['alarm_text_color_'.$row] = $value->alarm_text_color;
+            $data['alarm_text_size_'.$row] = $value->alarm_text_size;
+            $data['alarm_heartbeat_'.$row] = $value->alarm_heartbeat;
             $data['screen']++;
             $data['screenselect']++;
         }
@@ -221,6 +232,14 @@ class SettingController extends Controller
                 'info_checks' => json_encode($data['info_checks_'.$i]),
                 'alarm_code' => $data['alarm_code_'.$i],
                 'alarm_message' => $data['alarm_message_'.$i],
+                'alarm_height' => $data['alarm_height_'.$i],
+                'alarm_border' => $data['alarm_border_'.$i],
+                'alarm_color' => $data['alarm_color_'.$i],
+                'alarm_center_text' => $data['alarm_center_text_'.$i],
+                'alarm_right_text' => $data['alarm_right_text_'.$i],
+                'alarm_text_color' => $data['alarm_text_color_'.$i],
+                'alarm_text_size' => $data['alarm_text_size_'.$i],
+                'alarm_heartbeat' => $data['alarm_heartbeat_'.$i],
             ]);
         }
 
@@ -248,17 +267,17 @@ class SettingController extends Controller
             $validationarray['text_size_'.$i] = 'required|numeric|between:0,99';
             $validationarray['banner_height_'.$i] = 'required|numeric|between:0,999';
             $validationarray['banner_border_'.$i] = 'required|numeric|between:0,99';
+//            $validationarray['alarm_heartbeat_'.$i] = 'required|numeric|between:0,999';
+//            $validationarray['alarm_text_size_'.$i] = 'required|numeric|between:0,99';
+//            $validationarray['alarm_height_'.$i] = 'required|numeric|between:0,999';
+//            $validationarray['alarm_border_'.$i] = 'required|numeric|between:0,99';
         }
         $validationarray['*'] = new NoSpecialChars;
         $this->validate($request, $validationarray);
-
-        /* $this->validate($request, [
-            'name'          => 'required',
-            '*'             => new NoSpecialChars,
-        ]); */
     }
 
-    public function generalSetting() {
+    public function generalSetting()
+    {
 
         $formates = [[
             'value' => 'D-MMM-Y',
@@ -273,22 +292,6 @@ class SettingController extends Controller
             'value' => 'D/M/Y',
             'label' => date('d/m/Y'),
         ]];
-
-        // $stripe_env = [[
-        //     'value' => 'test',
-        //     'label' => 'Test (Sandbox)',
-        // ],[
-        //     'value' => 'live',
-        //     'label' => 'Live (Production)',
-        // ]];
-
-        // $paypal_env = [[
-        //     'value' => 'test',
-        //     'label' => 'Test (Sandbox)',
-        // ],[
-        //     'value' => 'live',
-        //     'label' => 'Live (Production)',
-        // ]];
 
         $company_name = GeneralSetting::where('key','company_name')->first();
         $application_name = GeneralSetting::where('key','application_name')->first();

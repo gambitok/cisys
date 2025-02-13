@@ -4,8 +4,6 @@ import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import { Inertia } from "@inertiajs/inertia";
 import {RoleManageArray} from '@/Components/SidebarRolePermissionCheck';
 import Paginate from '@/Components/Paginate';
-import InputLabel from '@/Components/InputLabel';
-import TextInput from '@/Components/TextInput';
 import Common from '@/Include/Common';
 import TabelSearchBox from '@/Components/TabelSearchBox';
 import UserDetailPopup from '@/Components/UserDetailPopup';
@@ -42,20 +40,16 @@ export default function Index(props) {
             allsettings.push(String(setting.id))
         ))
         setData("settings", allsettings)
-
         $("#unselectAll").show();
         $("#selectAll").hide();
-
         $("input[type='checkbox']").prop("checked", true);
     }
 
     function allCheckboxUncheckCode(){
         let allsettings = [];
         setData("settings", allsettings)
-
         $("#unselectAll").hide();
         $("#selectAll").show();
-
         $("input[type='checkbox']").prop("checked", false);
     }
 
@@ -93,9 +87,7 @@ export default function Index(props) {
             }
 
             <div className="table-responsive">
-
                 <TabelSearchBox s={props.s} o={props.o} ob={props.ob} route='settings' />
-
                 <table className="table">
                     <thead className="table-light">
                         <tr>
@@ -109,7 +101,6 @@ export default function Index(props) {
                             </th>
                             <th className="px-2 py-2 w-10">
                                 {Common.makeSortOrderLink('ID','settings','id',props.s,props.o,props.ob)}
-                                {/* ID */}
                             </th>
                             <th className="px-2 py-2">
                                 {Common.makeSortOrderLink('User','settings','username',props.s,props.o,props.ob)}
@@ -132,6 +123,20 @@ export default function Index(props) {
                             <th className="px-2 py-2">Banner Color</th>
                             <th className="px-2 py-2">Text Color</th>
                             <th className="px-2 py-2">
+                                {Common.makeSortOrderLink('Text Size (pt)','settings','text_size',props.s,props.o,props.ob)}
+                            </th>
+                            <th className="px-2 py-2">
+                                {Common.makeSortOrderLink('Hearbeat (seconds)','settings','hearbeat',props.s,props.o,props.ob)}
+                            </th>
+                            {/*<th className="px-2 py-2">Alarm Height (px)</th>*/}
+                            {/*<th className="px-2 py-2">Alarm Border (px)</th>*/}
+                            {/*<th className="px-2 py-2">Alarm Center Text</th>*/}
+                            {/*<th className="px-2 py-2">Alarm Right Text</th>*/}
+                            {/*<th className="px-2 py-2">Alarm Color</th>*/}
+                            {/*<th className="px-2 py-2">Alarm Text Color</th>*/}
+                            {/*<th className="px-2 py-2">Alarm Text Size (pt)</th>*/}
+                            {/*<th className="px-2 py-2">Alarm Heartbeat (seconds)</th>*/}
+                            <th className="px-2 py-2">
                                 {Common.makeSortOrderLink('Remark','settings','remark',props.s,props.o,props.ob)}
                             </th>
                             {
@@ -148,12 +153,8 @@ export default function Index(props) {
                                     <Checkbox name="setting[]" value={setting.id} handleChange={handleChange} />
                                 </td>
                                 <td className="border px-2 py-2">
-                                    {/* {props.firstitem + key} */}
                                     {setting.id}
                                 </td>
-
-                                {/* {{ ($products->currentpage()-1) * $products->perpage() + $key + 1 }} */}
-
                                 <td className="border px-2 py-2"><UserDetailPopup userName={setting?.user?.username} userId={setting?.user?.id} /></td>
                                 <td className="border px-2 py-2">{ setting.name }</td>
                                 <td className="border px-2 py-2">{ setting?.screen_first?.banner_height }</td>
@@ -162,32 +163,41 @@ export default function Index(props) {
                                 <td className="border px-2 py-2">{ setting?.screen_first?.right_text }</td>
                                 <td className="border px-2 py-2"><input type='color' value={ setting?.screen_first?.banner_color } readOnly /></td>
                                 <td className="border px-2 py-2"><input type='color' value={ setting?.screen_first?.text_color } readOnly /></td>
+                                <td className="border px-2 py-2">{ setting?.screen_first?.alarm_text_size }</td>
+                                <td className="border px-2 py-2">{ setting?.screen_first?.hearbeat }</td>
+
+                                {/*<td className="border px-2 py-2">{ setting?.screen_first?.alarm_height }</td>*/}
+                                {/*<td className="border px-2 py-2">{ setting?.screen_first?.alarm_border }</td>*/}
+                                {/*<td className="border px-2 py-2">{ setting?.screen_first?.alarm_center_text }</td>*/}
+                                {/*<td className="border px-2 py-2">{ setting?.screen_first?.alarm_right_text }</td>*/}
+                                {/*<td className="border px-2 py-2"><input type='color' value={ setting?.screen_first?.alarm_color } readOnly /></td>*/}
+                                {/*<td className="border px-2 py-2"><input type='color' value={ setting?.screen_first?.alarm_text_color } readOnly /></td>*/}
+                                {/*<td className="border px-2 py-2">{ setting?.screen_first?.alarm_text_size }</td>*/}
+                                {/*<td className="border px-2 py-2">{ setting?.screen_first?.alarm_heartbeat }</td>*/}
+
                                 <td className="border px-2 py-2">{ setting.remark }</td>
+                                {
+                                    RoleManageArray.roles.settings == 2 && (
+                                        <td className="border px-2 py-2">
+                                            <div className='row'>
+                                                <Link tabIndex="1" className="btn btn-primary waves-effect waves-light" href={route("settings.edit", setting.id)}>
+                                                    Edit
+                                                </Link>
+                                            </div>
 
-                                    {
-                                        RoleManageArray.roles.settings == 2 && (
-                                            <td className="border px-2 py-2">
-                                                <div className='row'>
-                                                    <Link tabIndex="1" className="btn btn-primary waves-effect waves-light" href={route("settings.edit", setting.id)}>
-                                                        Edit
-                                                    </Link>
-                                                </div>
-
-
-                                                <div className='row mt-2'>
-                                                    <button
-                                                        onClick={destroy}
-                                                        id={setting.id}
-                                                        tabIndex="-1"
-                                                        className="btn btn-danger waves-effect waves-light"
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        )
-                                    }
-
+                                            <div className='row mt-2'>
+                                                <button
+                                                    onClick={destroy}
+                                                    id={setting.id}
+                                                    tabIndex="-1"
+                                                    className="btn btn-danger waves-effect waves-light"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    )
+                                }
                             </tr>
                         ))}
 
@@ -204,11 +214,8 @@ export default function Index(props) {
                         )}
                     </tbody>
                 </table>
-
                 <Paginate datas={props.settings} />
-
             </div>
-
         </Authenticated>
     );
 }
