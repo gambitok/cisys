@@ -142,7 +142,6 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/get-user-data-popup/{id}', [UserController::class, 'getUserDataPopup'])->name('get-user-data-popup');
-
 });
 
 require __DIR__.'/auth.php';

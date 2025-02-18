@@ -31,8 +31,10 @@ export default function Index(props) {
         if (data.groups == '') {
             $("<div class='alert alert-danger'>Please select any group</div>").insertBefore("main");
         } else {
-            post(route("groups.multiple.delete"));
-            $("input[type='checkbox']").prop("checked", false);
+            if (confirm("Are you sure you want to delete that groups?")) {
+                post(route("groups.multiple.delete"));
+                $("input[type='checkbox']").prop("checked", false);
+            }
         }
     }
 

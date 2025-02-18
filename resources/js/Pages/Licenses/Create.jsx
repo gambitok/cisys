@@ -206,7 +206,7 @@ export default function Create(props) {
                                     {data.plan_id != 1 ? <th className="px-4 py-2">Year</th> : ''}
                                     <th className="px-4 py-2">Version</th>
                                     <th className="px-4 py-2"># of Client</th>
-                                    {(standalone_status === 1 && standaloneval > 0) && <th className="px-4 py-2">Standalone Mode</th>}
+                                    {(standalone_status === 1) && <th className="px-4 py-2">Standalone Mode</th>}
                                     <th className="px-4 py-2">Pricing</th>
                                 </tr>
                                 </thead>
@@ -243,7 +243,7 @@ export default function Create(props) {
                                             : clients
                                         }
                                     </td>
-                                    {(standalone_status === 1 && standaloneval > 0) && (
+                                    {(standalone_status === 1) && (
                                         <td className="border px-4 py-2 ">
                                             <label className="flex items-center" style={{ display: 'block', margin: 'auto' }}>
                                                 <Checkbox name="remember" value={standaloneval} handleChange={onHandleChange} />
@@ -294,7 +294,9 @@ export default function Create(props) {
                                         <div className="mt-4 formsubmitbutton">
                                             {
                                                 total < 0 || total == 0 || total == '-' ?
-                                                    <button type="submit" className="px-6 py-2 font-bold text-white bg-green-500 rounded" style={{ width: '100%' }}>Checkout</button>
+                                                    <div>
+                                                        <button type="submit" className="px-6 py-2 font-bold text-white bg-green-500 rounded" style={{ width: '100%' }}>Checkout</button>
+                                                    </div>
                                                     :
                                                     <div>
                                                         <button onClick={stripeCheckout} className="px-6 py-2 font-bold text-white bg-green-500 rounded" style={{ width: '100%' }}>Stripe checkout</button>

@@ -58,8 +58,10 @@ export default function Index(props) {
         if (data.settings == '') {
             $("<div class='alert alert-danger'>Please select any setting</div>").insertBefore("main");
         } else {
-            post(route("settings.multiple.delete"));
-            $("input[type='checkbox']").prop("checked", false);
+            if (confirm("Are you sure you want to delete that settings?")) {
+                post(route("settings.multiple.delete"));
+                $("input[type='checkbox']").prop("checked", false);
+            }
         }
     }
 

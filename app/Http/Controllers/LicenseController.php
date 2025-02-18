@@ -2,23 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Coupon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
-
 use App\Models\Plan;
 use App\Models\License;
 use App\Models\User;
-use App\Models\Setting;
-use App\Models\Permission;
-use App\Models\RoleHasPermission;
-use Illuminate\Support\Facades\Validator;
 use Arr;
 use Auth;
 
-class LicenseController extends Controller{
+class LicenseController extends Controller
+{
      /**
      * Show the form for creating a new resource.
      *
@@ -57,7 +52,13 @@ class LicenseController extends Controller{
 
         $licenses->appends($request->except(['page']));
 
-        return Inertia::render('Licenses/Index', ['licenses' => $licenses,'s' => $s,'o' => $o,'ob' => $ob,'firstitem' => $licenses->firstItem()]);
+        return Inertia::render('Licenses/Index', [
+            'licenses' => $licenses,
+            's' => $s,
+            'o' => $o,
+            'ob' => $ob,
+            'firstitem' => $licenses->firstItem()
+        ]);
     }
 
     public function create()

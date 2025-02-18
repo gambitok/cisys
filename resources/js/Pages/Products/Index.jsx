@@ -60,9 +60,11 @@ export default function Index(props) {
         $(".alert").remove();
         if (data.products == '') {
             $("<div class='alert alert-danger'>Please select any product</div>").insertBefore("main");
-        }else{
-            post(route("products.multiple.delete"));
-            $("input[type='checkbox']").prop("checked", false);
+        } else {
+            if (confirm("Are you sure you want to delete that settings?")) {
+                post(route("products.multiple.delete"));
+                $("input[type='checkbox']").prop("checked", false);
+            }
         }
     }
 

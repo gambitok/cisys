@@ -1,14 +1,8 @@
 import React from 'react';
 import Authenticated from '@/Layouts/Authenticated';
-import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import { Inertia } from "@inertiajs/inertia";
 import {RoleManageArray} from '@/Components/SidebarRolePermissionCheck';
-import InputLabel from '@/Components/InputLabel';
-import InputError from '@/Components/InputError';
-import Select from 'react-select';
-import Checkbox from '@/Components/Checkbox';
 import Common from '@/Include/Common';
-import $ from 'jquery';
 import TabelSearchBox from '@/Components/TabelSearchBox';
 import UserDetailPopup from '@/Components/UserDetailPopup';
 import Paginate from '@/Components/Paginate';
@@ -38,8 +32,7 @@ export default function Index(props) {
             header={'Transactions'}
             headtitle={'Transactions'}
         >
-            
-          
+
             <div className="table-responsive">
 
                 <TabelSearchBox s={props.s} o={props.o} ob={props.ob} route='transactions' />
@@ -57,12 +50,10 @@ export default function Index(props) {
                             <th className="px-2 py-2">{Common.makeSortOrderLink('Total Amount','transactions','total',props.s,props.o,props.ob)}</th>
                             <th className="px-2 py-2">{Common.makeSortOrderLink('Payment method','transactions','payment_type',props.s,props.o,props.ob)}</th>
                             <th className="px-2 py-2">{Common.makeSortOrderLink('Date','transactions','created_at',props.s,props.o,props.ob)}</th>
-                            <th className="px-2 py-2">Action</th>
+                            {RoleManageArray.roles.transactions == 2 && <th className="px-2 py-2">Action</th>}
                         </tr>
                     </thead>
                     <tbody>
-                        
-
                         {props.licenses.data.map((license,key) => (
                             <tr>
                                 <td className="border px-2 py-2">{ props.firstitem+key }</td>
@@ -71,25 +62,27 @@ export default function Index(props) {
                                 <td className="border px-2 py-2">{ license?.product?.name }</td>
                                 <td className="border px-2 py-2">${ license.total }</td>
                                 <td className="border px-2 py-2">{ paymentTypeNameGet(license.payment_type) }</td>
-                                <td className="border px-2 py-2">{Common.makeDateFormate(license.created_at,props.general_settings)}</td>                                
-                                <td className="border px-2 py-2">
-                                    {(license.payment_type != 1 && RoleManageArray.roles.transactions == 2 && license.refund == 0) && (
-                                        <div className='row mt-2'>
-                                            <button
-                                                onClick={refund}
-                                                id={license.id}
-                                                tabIndex="-1"
-                                                className="btn btn-warning waves-effect waves-light"
-                                            >
-                                                Refund
-                                            </button>
-                                        </div>
-                                    )}
-                                    {license.refund == 1 ? 'Refund Completed':''}
-                                </td>
+                                <td className="border px-2 py-2">{Common.makeDateFormate(license.created_at,props.general_settings)}</td>
+                                {RoleManageArray.roles.transactions == 2 && (
+                                    <td className="border px-2 py-2">
+                                        {(license.payment_type != 1 && license.refund == 0) && (
+                                            <div className='row mt-2'>
+                                                <button
+                                                    onClick={refund}
+                                                    id={license.id}
+                                                    tabIndex="-1"
+                                                    className="btn btn-warning waves-effect waves-light"
+                                                >
+                                                    Refund
+                                                </button>
+                                            </div>
+                                        )}
+                                        {license.refund == 1 ? 'Refund Completed' : ''}
+                                    </td>
+                                )}
                             </tr>
                         ))}
-                        
+
                         {props.licenses.data.length === 0 && (
                             <tr>
                                 <td
@@ -101,14 +94,13 @@ export default function Index(props) {
                                 </td>
                             </tr>
                         )}
-                        
                     </tbody>
                 </table>
 
                 <Paginate datas={props.licenses} />
 
             </div>
-            
+
         </Authenticated>
     );
 }

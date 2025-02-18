@@ -12,8 +12,8 @@ export default function Create(props) {
         work_email: "",
         username: "",
         password: "",
-        role_id: "",
-        status: "",
+        role_id: 0,
+        status: 0,
         api_key: "",
         // user_id: 0,
     });

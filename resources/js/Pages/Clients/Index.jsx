@@ -28,8 +28,10 @@ export default function Index(props) {
         if (data.clients == '') {
             $("<div class='alert alert-danger'>Please select any client</div>").insertBefore("main");
         } else {
-            post(route("clients.multiple.delete"));
-            $("input[type='checkbox']").prop("checked", false);
+            if (confirm("Are you sure you want to delete that clients?")) {
+                post(route("clients.multiple.delete"));
+                $("input[type='checkbox']").prop("checked", false);
+            }
         }
     }
 
