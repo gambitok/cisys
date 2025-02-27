@@ -3,33 +3,27 @@ import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
 import InputError from '@/Components/InputError';
 import Checkbox from '@/Components/Checkbox';
-import Select from 'react-select';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
-
 
 export default function Form({ data,errors,setData,types,count }) {
 
-
+    console.log(data);
     const handleChange = (e) => {
         let id = e.target.value;
-    
         setData((prevData) => ({
             ...prevData,
             role_id: e.target.checked
                 ? [...prevData.role_id, id]
                 : prevData.role_id.filter((item) => item !== id),
         }));
-    
     };
 
     const checkboxvaluechecked = (value, selectedValues) => {
         return selectedValues.includes(String(value));
-      };
-    
+    };
 
     return (
        <div>
-
             <div className='row g-3 my-2'>
                 <div className='col-md-6'>
                     <div className="mb-3">
@@ -69,7 +63,7 @@ export default function Form({ data,errors,setData,types,count }) {
                                 <td style={{ width: '10%'}}>
                                     <p style={{ marginLeft: '47%',marginTop: '43%'}}>/</p>
                                 </td>
-                                <td style={{ width: '45%'}}> 
+                                <td style={{ width: '45%'}}>
                                 <InputLabel htmlFor="use_limit" value="Max Usage" />
                                 <TextInput
                                     id="use_limit"
@@ -84,10 +78,9 @@ export default function Form({ data,errors,setData,types,count }) {
                                 </td>
                             </tr>
                         </table>
-                     
                     </div>
                     <div className="mb-3 col-md-6">
-                        
+
                     </div>
                     </div>
                 </div>
@@ -113,28 +106,12 @@ export default function Form({ data,errors,setData,types,count }) {
                     <div className="mb-3">
                         <InputLabel value="User Type" />
                         <br/>
-                        {/* <Select
-                            className="basic-single"
-                            classNamePrefix="select"
-                            defaultValue={typeval}
-                            name="role_id"
-                            options={types}
-                            onChange={optionChanged}
-                            styles={{option: (styles, state) => ({...styles,cursor: 'pointer',}),control: (styles) => ({...styles,cursor: 'pointer',}),}}
-                        /> */}
-
-                                 {types.map((item) => (
-                                    
-                                    <label className="flex items-center" style={{display: 'unset',marginLeft: '17px'}}>
-
-                                        <Checkbox name="role_id[]" value={item.value} handleChange={handleChange} checked={checkboxvaluechecked(item.value,data.role_id)} />
-                                        
-                                        <span className="ml-2 text-sm text-gray-600">{item.label}</span>
-                                    </label>
-                                    
-                                ))} 
-
-
+                            {types.map((item) => (
+                                <label className="flex items-center" style={{display: 'unset',marginLeft: '17px'}}>
+                                    <Checkbox name="role_id[]" value={item.value} handleChange={handleChange} checked={checkboxvaluechecked(item.value,data.role_id)} />
+                                    <span className="ml-2 text-sm text-gray-600">{item.label}</span>
+                                </label>
+                            ))}
                         <InputError message={errors.role_id} className="mt-2" />
                     </div>
                 </div>
@@ -142,7 +119,7 @@ export default function Form({ data,errors,setData,types,count }) {
 
             <div className='row g-3 my-2'>
                 <div className='col-md-6'>
-                    <div className="mb-3">                    
+                    <div className="mb-3">
                         <label htmlFor="moq" className={`block font-medium text-sm text-gray-700 `}>
                             MOQ{/*  <small style={{fontSize: "10px"}}>(Percentage)</small> */}
                         </label>
@@ -176,12 +153,7 @@ export default function Form({ data,errors,setData,types,count }) {
                     </div>
                 </div>
             </div>
-            				
 
-
-            
-
-            
             <div className="mt-4 formsubmitbutton">
                 <Link
                     className="btn btn-primary waves-effect waves-light"
@@ -195,9 +167,7 @@ export default function Form({ data,errors,setData,types,count }) {
                 >
                     Save
                 </button>
-                
             </div>
-        
        </div>
     );
 }

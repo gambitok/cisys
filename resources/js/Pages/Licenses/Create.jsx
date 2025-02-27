@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Inertia } from "@inertiajs/inertia";
 import Authenticated from '@/Layouts/Authenticated';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import Select from 'react-select';

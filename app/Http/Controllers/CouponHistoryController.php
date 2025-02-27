@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Validator;
 use Arr;
 use Hash;
 
-class CouponHistoryController extends Controller{
+class CouponHistoryController extends Controller
+{
      /**
      * Show the form for creating a new resource.
      *

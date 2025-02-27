@@ -14,6 +14,7 @@ class Plan extends Model
         'user_id',
         'product_id',
         'role_id',
+        'role_ids',
         'coupon_id',
         'name',
         'qty',
@@ -36,6 +37,8 @@ class Plan extends Model
     {
         return $this->belongsTo(Role::class);
     }
+
+
 
     public function product()
     {

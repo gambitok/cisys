@@ -8,6 +8,7 @@ export default function Index(props) {
     const { data, setData, errors, put } = useForm({
         product_id: props.plan.product_id || "",
         role_id: props.plan.role_id || "",
+        role_ids: props.plan.role_ids || [''],
         coupon_id: props.plan.coupon_id || "",
         name: props.plan.name || "",
         qty: props.plan.qty || "",

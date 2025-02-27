@@ -19,11 +19,12 @@ export default function Index(props) {
         var payment_name = 'Free transaction';
         if (payment_type == 2) {
             payment_name = 'Stripe';
-        }else if(payment_type == 3){
+        } else if (payment_type == 3) {
             payment_name = 'Paypal';
         }
         return payment_name;
     }
+
     return (
         <Authenticated
             props={props}
@@ -40,10 +41,7 @@ export default function Index(props) {
                 <table className="table">
                     <thead className="table-light">
                         <tr>
-                            <th className="px-2 py-2 w-10">
-                                {/* {Common.makeSortOrderLink('ID','transactions','id',props.s,props.o,props.ob)} */}
-                                ID
-                            </th>
+                            <th className="px-2 py-2 w-10">ID</th>
                             <th className="px-2 py-2 w-10">{Common.makeSortOrderLink('Transactions ID','transactions','transaction_id',props.s,props.o,props.ob)}</th>
                             <th className="px-2 py-2">{Common.makeSortOrderLink('Customer','transactions','username',props.s,props.o,props.ob)}</th>
                             <th className="px-2 py-2">{Common.makeSortOrderLink('Product','transactions','product',props.s,props.o,props.ob)}</th>
@@ -54,15 +52,19 @@ export default function Index(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {props.licenses.data.map((license,key) => (
-                            <tr>
-                                <td className="border px-2 py-2">{ props.firstitem+key }</td>
-                                <td className="border px-2 py-2">{license.transaction_id}</td>
+                    {props.licenses.data.map((license, key) => {
+                        console.log(license);
+                        return (
+                            <tr key={key}>
+                                <td className="border px-2 py-2">{ props.firstitem + key }</td>
+                                <td className="border px-2 py-2">{ license.transaction_id }</td>
                                 <td className="border px-2 py-2"><UserDetailPopup userName={license?.user?.username} userId={license?.user?.id} /></td>
-                                <td className="border px-2 py-2">{ license?.product?.name }</td>
+                                <td className="border px-2 py-2">
+                                    {license?.product?.name ?? 'N/A'}
+                                </td>
                                 <td className="border px-2 py-2">${ license.total }</td>
                                 <td className="border px-2 py-2">{ paymentTypeNameGet(license.payment_type) }</td>
-                                <td className="border px-2 py-2">{Common.makeDateFormate(license.created_at,props.general_settings)}</td>
+                                <td className="border px-2 py-2">{Common.makeDateFormate(license.created_at, props.general_settings)}</td>
                                 {RoleManageArray.roles.transactions == 2 && (
                                     <td className="border px-2 py-2">
                                         {(license.payment_type != 1 && license.refund == 0) && (
@@ -81,7 +83,8 @@ export default function Index(props) {
                                     </td>
                                 )}
                             </tr>
-                        ))}
+                        );
+                    })}
 
                         {props.licenses.data.length === 0 && (
                             <tr>

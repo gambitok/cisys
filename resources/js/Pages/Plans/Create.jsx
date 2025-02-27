@@ -8,6 +8,7 @@ export default function Create(props) {
     const { data, setData, errors, post } = useForm({
         "product_id": "",
         "role_id": "",
+        "role_ids": ['16'],
         "coupon_id": "",
         "name": "",
         "qty": "",
@@ -29,11 +30,11 @@ export default function Create(props) {
             headtitle={'Create package'}
         >
 
-                <form name="createForm" onSubmit={handleSubmit}>
+            <form name="createForm" onSubmit={handleSubmit}>
 
-                    <Form data={data} errors={errors} setData={setData} types={props.types} products={props.products} coupons={props.coupons} />
+                <Form data={data} errors={errors} setData={setData} types={props.types} products={props.products} coupons={props.coupons} />
 
-                </form>
+            </form>
 
         </Authenticated>
     );

@@ -3,26 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
-use App\Models\UserType;
 use App\Models\Plan;
 use App\Models\Product;
 use App\Models\Coupon;
 use App\Models\Role;
-use App\Models\RoleHasPermission;
-use Illuminate\Support\Facades\Validator;
 use Arr;
 use Hash;
 use App\Rules\NoSpecialChars;
 use App\Rules\PlanCheckCouponIsApplyableOrNot;
+use Illuminate\Support\Facades\Log;
 
 class PlanController extends Controller
 {
 
-     /**
+    /**
      * Show the form for creating a new resource.
      *
      * @return Response
@@ -33,19 +30,21 @@ class PlanController extends Controller
         $o = 'DESC';
         $ob = 'id';
 
-        $plans = Plan::with(['role','product','coupon']);
+        $plans = Plan::with(['role', 'product', 'coupon']);
 
         if (isset($request->s)) {
             $s = $request->s;
 
-            $plans = $plans->orWhere('name','LIKE','%'.$request->s.'%')->orWhere('qty','LIKE','%'.$request->s.'%')->orWhere('price','LIKE','%'.$request->s.'%');
+            $plans = $plans->orWhere('name', 'LIKE', '%' . $request->s . '%')
+                ->orWhere('qty', 'LIKE', '%' . $request->s . '%')
+                ->orWhere('price', 'LIKE', '%' . $request->s . '%');
 
-            $plans = $plans->orWhereHas('role', function($query) use ($s) {
-                return $query->where('name','LIKE','%'.$s.'%');
+            $plans = $plans->orWhereHas('role', function ($query) use ($s) {
+                return $query->where('name', 'LIKE', '%' . $s . '%');
             });
 
-            $plans = $plans->orWhereHas('product', function($query) use ($s) {
-                return $query->where('name','LIKE','%'.$s.'%');
+            $plans = $plans->orWhereHas('product', function ($query) use ($s) {
+                return $query->where('name', 'LIKE', '%' . $s . '%');
             });
         }
 
@@ -55,9 +54,9 @@ class PlanController extends Controller
         }
 
         if ($ob == 'type') {
-            $plans = $plans->orderBy(Role::select('name')->whereColumn('roles.id', 'plans.role_id'),$o);
+            $plans = $plans->orderBy(Role::select('name')->whereColumn('roles.id', 'plans.role_id'), $o);
         } elseif ($ob == 'product') {
-            $plans = $plans->orderBy(Product::select('name')->whereColumn('products.id', 'plans.product_id'),$o);
+            $plans = $plans->orderBy(Product::select('name')->whereColumn('products.id', 'plans.product_id'), $o);
         } else {
             $plans = $plans->orderBy($ob, $o);
         }
@@ -65,6 +64,18 @@ class PlanController extends Controller
         $plans = $plans->paginate(env('PAGINATE_NO_OF_ROWS'));
 
         $plans->appends($request->except(['page']));
+
+        $plans->map(function ($plan) {
+            $roleIds = json_decode($plan->role_ids, true);
+
+            if (!is_array($roleIds)) {
+                $roleIds = [];
+            }
+
+            $plan->role_names = Role::whereIn('id', $roleIds)->pluck('name');
+
+            return $plan;
+        });
 
         return Inertia::render('Plans/Index', [
             'plans' => $plans,
@@ -84,7 +95,6 @@ class PlanController extends Controller
     {
         $user_type = Role::all();
         $types = [];
-
         foreach ($user_type as $value) {
             $types[] = [
                 'value' => $value->id,
@@ -124,7 +134,15 @@ class PlanController extends Controller
 
         $data = $request->all();
         $data['user_id'] = auth()->id();
+        $data['role_id'] = $data['role_id'] ?? 0;
         $data['standalone'] = $data['standalone'] ?? 0;
+
+        if (!is_array($data['role_ids'])) {
+            $decoded = json_decode($data['role_ids'], true);
+            $data['role_ids'] = array_values($decoded);
+        }
+        $data['role_ids'] = array_filter($data['role_ids'], fn($value) => !is_null($value));
+        $data['role_ids'] = json_encode(array_values($data['role_ids']));
 
         Plan::create($data);
 
@@ -138,7 +156,7 @@ class PlanController extends Controller
      */
     public function edit(Plan $plan)
     {
-        $plan['role_id'] = json_decode($plan['role_id']);
+        $plan['role_ids'] = json_decode($plan['role_ids']);
 
         $user_type = Role::all();
         $types = [];
@@ -182,20 +200,24 @@ class PlanController extends Controller
      */
     public function update(Request $request, Plan $plan)
     {
-        $validated = $request->validate([
-            'product_id' => 'required|integer',
-            'role_id' => 'required|integer',
-            'coupon_id' => 'nullable|integer',
-            'name' => 'required|string|max:255',
-            'qty' => 'required|integer',
-            'price' => 'required|numeric',
-            'standalone' => 'required|numeric',
-            'standalone_status' => 'nullable|boolean',
-        ]);
+        $this->settingValidation($request);
+        Log::info('Request data:', ['request' => $request->all()]);
 
-        $validated['standalone'] = $validated['standalone'] ?? 0;
+        $data = $request->all();
 
-        $plan->update($validated);
+        $data['role_id'] = $data['role_id'] ?? 0;
+        $data['standalone'] = $data['standalone'] ?? 0;
+
+        if (!is_array($data['role_ids'])) {
+            $decoded = json_decode($data['role_ids'], true);
+            $data['role_ids'] = array_values($decoded);
+        }
+        $data['role_ids'] = array_filter($data['role_ids'], fn($value) => !is_null($value));
+        $data['role_ids'] = json_encode(array_values($data['role_ids']));
+
+        Log::info('Role IDs before saving:', ['role_ids' => $data['role_ids']]);
+
+        $plan->update($data);
 
         return redirect()->route('plans.index')->with('success', 'Plan updated successfully!');
     }
@@ -216,7 +238,9 @@ class PlanController extends Controller
     {
         $this->validate($request, [
             'product_id'    => 'required|integer',
-            'role_id'       => 'required|integer',
+//            'role_id'       => 'required|integer',
+            'role_ids' => ['required', 'array', 'min:1'],
+            'role_ids.*' => ['integer'],
             'name'          => 'required|string|max:255',
             'qty'           => 'required|integer',
             'price'         => 'required|numeric',
@@ -233,5 +257,4 @@ class PlanController extends Controller
             'standalone.gte' => 'The standalone field cannot be less than 0.',
         ];
     }
-
 }

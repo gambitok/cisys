@@ -7,7 +7,7 @@ import Toggle from 'react-bootstrap-toggle';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 
 export default function Form({ data,errors,setData,roles }) {
-
+    console.log("Selected Role ID:", data.role_id);
     const optionChanged = value => {
         setData("role_id",value.value);
     };
@@ -138,7 +138,7 @@ export default function Form({ data,errors,setData,roles }) {
                     <Select
                         className="basic-single"
                         classNamePrefix="select"
-                        defaultValue={rolesval}
+                        value={rolesval}
                         name="role_id"
                         options={roles}
                         onChange={optionChanged}

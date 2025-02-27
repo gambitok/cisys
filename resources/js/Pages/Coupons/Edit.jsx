@@ -4,7 +4,7 @@ import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import Form from '@/Pages/Coupons/Form';
 
 export default function Index(props) {
-    
+
     const { data, setData, errors, put } = useForm({
         code: props.coupon.code || "",
         name: props.coupon.name || "",
@@ -27,14 +27,13 @@ export default function Index(props) {
             header={'Edit coupon'}
             headtitle={'Edit coupon'}
         >
-            
-                            <form name="createForm" onSubmit={handleSubmit}>
-                                
-                                <Form data={data} errors={errors} setData={setData} types={props.types} count={props.count} />
 
-                            </form>
+            <form name="createForm" onSubmit={handleSubmit}>
 
-            
+                <Form data={data} errors={errors} setData={setData} types={props.types} count={props.count} />
+
+            </form>
+
         </Authenticated>
     );
 }

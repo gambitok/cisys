@@ -23,7 +23,7 @@ export default function Index(props) {
             header={'Coupon History'}
             headtitle={'Coupon history'}
         >
-          
+
             <div className="table-responsive">
 
                 <TabelSearchBox s={props.s} o={props.o} ob={props.ob} route='coupon-history' />
@@ -31,10 +31,7 @@ export default function Index(props) {
                 <table className="table">
                     <thead className="table-light">
                         <tr>
-                            <th className="px-2 py-2 w-10">
-                                {/* {Common.makeSortOrderLink('ID','coupon-history','id',props.s,props.o,props.ob)} */}
-                                ID
-                            </th>
+                            <th className="px-2 py-2 w-10">ID</th>
                             <th className="px-2 py-2">{Common.makeSortOrderLink('Username','coupon-history','username',props.s,props.o,props.ob)}</th>
                             <th className="px-2 py-2">{Common.makeSortOrderLink('Product','coupon-history','product_name',props.s,props.o,props.ob)}</th>
                             <th className="px-2 py-2">{Common.makeSortOrderLink('Version','coupon-history','product_version',props.s,props.o,props.ob)}</th>
@@ -45,7 +42,7 @@ export default function Index(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        
+
                         {props.couponlogs.data.map((couponlog,key) => (
                             <tr>
                                 <td className="border px-2 py-2">{ props.firstitem+key }</td>
@@ -57,7 +54,7 @@ export default function Index(props) {
                                 <td className="border px-2 py-2">{couponlog.coupon_code}</td>
                                 <td className="border px-2 py-2">{Common.makeDateFormate(couponlog.created_at,props.general_settings)}</td>
 
-                                {/* 
+                                {/*
                                 <td className="border px-2 py-2">{ license.buy_date }</td>
                                 <td className="border px-2 py-2">{ license?.product?.name }</td>
                                 <td className="border px-2 py-2">${ license.total }</td>
@@ -65,7 +62,7 @@ export default function Index(props) {
                                 <td className="border px-2 py-2">-</td> */}
                             </tr>
                         ))}
-                        
+
                         {props.couponlogs.data.length === 0 && (
                             <tr>
                                 <td
@@ -85,7 +82,7 @@ export default function Index(props) {
                 <Paginate datas={props.couponlogs} />
 
             </div>
-            
+
         </Authenticated>
     );
 }

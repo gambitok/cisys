@@ -72,7 +72,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'username' => 'required|regex:/^[a-zA-Z0-9_.-]+$/|unique:users,username|min:4',
             'password' => 'required',
-            'role_id' => 'required',
+            'role_id' => 'required|integer|exists:roles,id',
             '*' => new NoSpecialChars,
         ]);
 
@@ -82,6 +82,13 @@ class UserController extends Controller
 
         $data = $request->all();
         $data['password'] = Hash::make($data['password']);
+
+        $user = Auth::user();
+        $role_id = $user->role_id;
+        if ($role_id == 1 || $role_id == 14) {
+            $data['parent_id'] = $user->id;
+        }
+
         User::create($data);
 
         return redirect()->route('users.index')->with('success', 'Data inserted successfully!');

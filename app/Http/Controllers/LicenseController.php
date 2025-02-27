@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Plan;
@@ -14,7 +13,7 @@ use Auth;
 
 class LicenseController extends Controller
 {
-     /**
+    /**
      * Show the form for creating a new resource.
      *
      * @return Response
@@ -25,15 +24,23 @@ class LicenseController extends Controller
         $o = 'DESC';
         $ob = 'id';
 
-        $licenses = License::with(['user','transaction']);
+        $licenses = License::with(['user', 'transaction', 'product' => function ($query) {
+            $query->withoutGlobalScopes();
+        }]);
 
         if (isset($request->s)) {
             $s = $request->s;
 
-            $licenses = $licenses->orWhere('id','LIKE','%'.$request->s.'%')->orWhere('plan_id','LIKE','%'.$request->s.'%')->orWhere('device_count','LIKE','%'.$request->s.'%')->orWhere('server_id','LIKE','%'.$request->s.'%')->orWhere('buy_date','LIKE','%'.$request->s.'%')->orWhere('expiration_date','LIKE','%'.$request->s.'%');
-
-            $licenses = $licenses->orWhereHas('user', function($query) use ($s) {
-                return $query->where('username','LIKE','%'.$s.'%');
+            $licenses = $licenses->where(function($query) use ($s) {
+                $query->orWhere('id', 'LIKE', '%' . $s . '%')
+                    ->orWhere('plan_id', 'LIKE', '%' . $s . '%')
+                    ->orWhere('device_count', 'LIKE', '%' . $s . '%')
+                    ->orWhere('server_id', 'LIKE', '%' . $s . '%')
+                    ->orWhere('buy_date', 'LIKE', '%' . $s . '%')
+                    ->orWhere('expiration_date', 'LIKE', '%' . $s . '%')
+                    ->orWhereHas('user', function($query) use ($s) {
+                        $query->where('username', 'LIKE', '%' . $s . '%');
+                    });
             });
         }
 
@@ -43,7 +50,7 @@ class LicenseController extends Controller
         }
 
         if ($ob == 'username') {
-            $licenses = $licenses->orderBy(User::select($ob)->whereColumn('licenses.user_id', 'users.id'),$o);
+            $licenses = $licenses->orderBy(User::select($ob)->whereColumn('licenses.user_id', 'users.id'), $o);
         } else {
             $licenses = $licenses->orderBy($ob, $o);
         }
@@ -66,29 +73,10 @@ class LicenseController extends Controller
         $user = Auth::user();
         $role_id = $user->role_id;
 
-        /* $user_type = UserType::all();
-        $types = [];
-        foreach ($user_type as $value) {
-            $types[] = [
-                'value' => $value->id,
-                'label' => $value->name,
-            ];
-        }
-
-        $getProduct = Product::all();
-        $products = [];
-        foreach ($getProduct as $value) {
-            $products[] = [
-                'value' => $value->id,
-                'label' => $value->name,
-            ];
-        } */
-
         $all_plans = Plan::with(['coupon', 'product'])->orderBy('id')->get();
         $plans = [];
 
         foreach ($all_plans as $value) {
-            // Skip plans based on the user's role_id
             if (($role_id == 14 && $value->role_id == 1) ||
                 ($role_id == 16 && in_array($value->role_id, [1, 14]))) {
                 continue;
@@ -116,7 +104,6 @@ class LicenseController extends Controller
             $transaction_id_gen .= $characters[mt_rand(0, 61)];
 
         $transaction_id = $request->plan_id.'_'.$transaction_id_gen;
-        Log::info('Request data:', $request->all());
         $couponCode = $request->input('couponcode');
         $customclients = $request->input('customclients');
 
