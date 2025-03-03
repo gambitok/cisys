@@ -27,18 +27,24 @@ export default function VerifyEmail(props) {
                 </div>
             )}
 
+            {props.status === 'verification-link-error' && (
+                <div className="mb-4 font-medium text-sm text-red-600">
+                    Try again in 2 minutes.
+                </div>
+            )}
+
             <form onSubmit={submit}>
                 <div className="mt-4 flex items-center justify-between">
                     <Button processing={processing}>Resend Verification Email</Button>
 
-                    <Link
-                        href={route('logout')}
-                        method="post"
-                        as="button"
-                        className="underline text-sm text-gray-600 hover:text-gray-900"
-                    >
-                        Log Out
-                    </Link>
+                    {/*<Link*/}
+                    {/*    href={route('logout')}*/}
+                    {/*    method="post"*/}
+                    {/*    as="button"*/}
+                    {/*    className="underline text-sm text-gray-600 hover:text-gray-900"*/}
+                    {/*>*/}
+                    {/*    Log Out*/}
+                    {/*</Link>*/}
                 </div>
             </form>
         </Guest>

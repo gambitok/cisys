@@ -14,6 +14,7 @@ use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Rules\ReCaptcha;
+use Illuminate\Support\Facades\Session;
 
 class RegisteredUserController extends Controller
 {
@@ -82,8 +83,11 @@ class RegisteredUserController extends Controller
         $user = User::find($user->id);
         $user->sendEmailVerificationNotification();
         */
-        Auth::login($user);
+        //Auth::login($user);
+       // $user->sendEmailVerificationNotification();
+        Session::put('registered_user', $user);
+        Session::put('email_verification_sent', true);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('verification.notice');
     }
 }
