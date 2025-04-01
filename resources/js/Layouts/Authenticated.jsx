@@ -42,8 +42,8 @@ export default function Authenticated({ props, auth, header, children, headtitle
                         <div className='container-fluid'>
                             <div className="py-3">
                                 <div className="mx-auto sm:px-6 lg:px-0">
-                                    <div className="bg-white shadow-sm sm:rounded-lg">
-                                        <div className="p-2 bg-white border-b border-gray-200">
+                                    <div className="shadow-sm sm:rounded-lg">
+                                        <div className="p-2 border-b border-gray-200">
                                             {showSuccess && <div className="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> {flash.success}</div>}
                                             {showError && <div className="alert alert-danger alert-dismissible fade show" role="alert"><strong>Error!</strong> {flash.error}</div>}
                                             <main>{children}</main>

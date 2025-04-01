@@ -1,11 +1,12 @@
 import React from 'react';
 import Dropdown from '@/Components/Dropdown';
+import ThemeSwitcher from '@/Components/ThemeSwitcher';
 
 export default function Nav({Toggle,auth,header}) {
     return (
         <div>
-            <nav className="navbar navbar-expand-lg navbar-light bg-white">
-                
+            <nav className="navbar navbar-expand-lg navbar-light">
+
                 <div className="navbar-collapse pr-5 pl-5" id="navbarText">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">
@@ -15,13 +16,14 @@ export default function Nav({Toggle,auth,header}) {
                             <span className="inline-flex rounded-md custom-nav-title">{header}</span>
                         </li>
                     </ul>
+                    <ThemeSwitcher />
                     <span className="navbar-text">
                         <Dropdown>
                             <Dropdown.Trigger>
                                 <span className="inline-flex rounded-md">
                                     <button
                                         type="button"
-                                        className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+                                        className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                     >
                                         {auth.user.name} {
                                             auth.role_name != '' ? '('+auth.role_name+')':''
@@ -52,32 +54,9 @@ export default function Nav({Toggle,auth,header}) {
                                 </Dropdown.Link>
                             </Dropdown.Content>
                         </Dropdown>
-
-
-                        
                     </span>
                 </div>
             </nav>
-            {/* <nav className="navbar navbar-expand-sm navbar-dark bg-white">
-                <i className="navbar-brand bi bi-justify-left fs-4 cursor-pointer" onClick={Toggle} style={{color: 'black'}}></i>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li className="nav-item dropdown">
-                            <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Dropdown
-                            </a>
-                            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a href="" className="dropdown-item">Profile</a>
-                                <a href="" className="dropdown-item">Setting</a>
-                                <a href="" className="dropdown-item">Logout</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </nav> */}
         </div>
     );
 }

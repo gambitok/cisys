@@ -4,12 +4,12 @@ import TextInput from '@/Components/TextInput';
 import $ from 'jquery';
 import Common from '@/Include/Common';
 
-export default function TabelSearchBox({ s,o,ob,route,ldap=false }) {
+export default function TabelSearchBox({ s,o,ob,user_id,route,ldap=false }) {
 
     const { data, setData } = useForm({
         search: s || "",
     });
-    
+
     // typing stop in search after 1 second call function
     var typingTimer;
     var doneTypingInterval = 1000;
@@ -18,7 +18,7 @@ export default function TabelSearchBox({ s,o,ob,route,ldap=false }) {
         if ($('#search').val) {
             typingTimer = setTimeout(function(){
                 var search = $("#search").val();
-                Common.makeUrlWithSearchAndOrder(route,search,o,ob,ldap);
+                Common.makeUrlWithSearchAndOrder(route,search,o,ob,user_id,ldap);
             }, doneTypingInterval);
         }
     });

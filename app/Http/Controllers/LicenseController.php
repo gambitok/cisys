@@ -23,17 +23,21 @@ class LicenseController extends Controller
         $s = '';
         $o = 'DESC';
         $ob = 'id';
+        $userId = $request->user_id;
 
         $licenses = License::with(['user', 'transaction', 'product' => function ($query) {
             $query->withoutGlobalScopes();
         }]);
+
+        if ($userId) {
+            $licenses = $licenses->where('user_id', $userId);
+        }
 
         if (isset($request->s)) {
             $s = $request->s;
 
             $licenses = $licenses->where(function($query) use ($s) {
                 $query->orWhere('id', 'LIKE', '%' . $s . '%')
-                    ->orWhere('plan_id', 'LIKE', '%' . $s . '%')
                     ->orWhere('device_count', 'LIKE', '%' . $s . '%')
                     ->orWhere('server_id', 'LIKE', '%' . $s . '%')
                     ->orWhere('buy_date', 'LIKE', '%' . $s . '%')
@@ -64,6 +68,7 @@ class LicenseController extends Controller
             's' => $s,
             'o' => $o,
             'ob' => $ob,
+            'user_id' => $userId,
             'firstitem' => $licenses->firstItem()
         ]);
     }

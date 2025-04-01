@@ -25,21 +25,16 @@ class EmailVerificationNotificationController extends Controller
                 return back()->with('status', 'verification-link-error');
             }
 
-            // Отримуємо користувача з сесії
             $user = Session::get('registered_user');
 
-            // Якщо користувач є в сесії
             if ($user) {
-                // Відправляємо лист на підтвердження email
                 $user->sendEmailVerificationNotification();
 
-                // Оновлюємо час останньої спроби
                 Session::put('last_verification_attempt', Carbon::now());
 
                 return redirect()->back()->with('status', 'verification-link-sent');
             }
 
-            // Якщо користувача немає в сесії, редіректимо на сторінку логіну
             return redirect()->route('login');
         }
 }

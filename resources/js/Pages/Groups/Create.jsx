@@ -1,16 +1,14 @@
 import React from 'react';
 import Authenticated from '@/Layouts/Authenticated';
-import { Head, Link, useForm } from '@inertiajs/inertia-react';
+import { useForm } from '@inertiajs/inertia-react';
 import Form from '@/Pages/Groups/Form';
 
-
 export default function Create(props) {
-    
+
     const { data, setData, errors, post } = useForm({
         "name": "",
         "setting_id": "",
     });
-    				
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -25,7 +23,6 @@ export default function Create(props) {
             header={'Create group'}
             headtitle={'Create group'}
         >
-            
 
             <form name="createForm" onSubmit={handleSubmit}>
 
@@ -33,8 +30,6 @@ export default function Create(props) {
 
             </form>
 
-                        
-            
         </Authenticated>
     );
 }

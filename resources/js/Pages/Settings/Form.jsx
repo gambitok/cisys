@@ -191,28 +191,44 @@ export default function Form({ data, errors, setData, permissions, users, role_i
             <div className='row g-3 my-2'>
                 <div className='col-md-12'>
                     <nav>
-                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                            {Array.from(
-                                Array(data.screen), (v,i) =>
-                                    <button className={data.screenselect === i + 1 ? 'nav-link active' : 'nav-link'} id={'nav-tab'+(i+1)} data-bs-toggle="tab" type="button" onClick={()=>updateDataTab(i+1)}>
-                                        Screen #{i+1}
+                        <div className="nav nav-tabs nav-tabs-custom" id="nav-tab" role="tablist">
+                            {window.innerWidth < 768 ? (
+                                <select className="form-select" onChange={(e) => updateDataTab(Number(e.target.value))}>
+                                    {Array.from(Array(data.screen), (v, i) => (
+                                        <option key={i} value={i + 1} selected={data.screenselect === i + 1}>
+                                            Screen #{i + 1}
+                                        </option>
+                                    ))}
+                                </select>
+                            ) : (
+                                Array.from(Array(data.screen), (v, i) => (
+                                    <button
+                                        key={i}
+                                        className={data.screenselect === i + 1 ? 'nav-link active' : 'nav-link'}
+                                        id={'nav-tab' + (i + 1)}
+                                        data-bs-toggle="tab"
+                                        type="button"
+                                        onClick={() => updateDataTab(i + 1)}
+                                    >
+                                        Screen #{i + 1}
                                     </button>
+                                ))
                             )}
 
-                            <button className='nav-link' id='nav-tab-plus' data-bs-toggle="tab" type="button" onClick={()=>screenCick(1)}>
-                                <i className="bi bi-plus-lg" style={{fontSize: "25px"}}></i>
-                            </button>
+                            <div className="nav-controls">
+                                <button className="nav-link" id="nav-tab-plus" data-bs-toggle="tab" type="button" onClick={() => screenCick(1)}>
+                                    ➕
+                                </button>
 
-                            <button className='nav-link' id='nav-tab-minus' data-bs-toggle="tab" type="button" onClick={()=>screenCick(0)}>
-                                <i className="bi bi-dash-lg" style={{fontSize: "25px"}}></i>
-                            </button>
-
+                                <button className="nav-link" id="nav-tab-minus" data-bs-toggle="tab" type="button" onClick={() => screenCick(0)}>
+                                    ➖
+                                </button>
+                            </div>
                         </div>
                     </nav>
+
                 </div>
             </div>
-
-            {/* <hr /> */}
 
             <div id='screen-data'>
 

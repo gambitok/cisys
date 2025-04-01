@@ -1,9 +1,7 @@
 import React from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
-import { Inertia } from "@inertiajs/inertia";
 import {RoleManageArray} from '@/Components/SidebarRolePermissionCheck';
-import Select from 'react-select';
 import Checkbox from '@/Components/Checkbox';
 import TabelSearchBox from '@/Components/TabelSearchBox';
 import UserDetailPopup from '@/Components/UserDetailPopup';
@@ -152,7 +150,6 @@ export default function Index(props) {
                                         })
                                         $('#server-id-'+license.license_id).html('<span data-title="'+license.server_id+'">'+license.server_id.slice(0, 8)+'...</span>');
                                         $('.progress-'+license.license_id).replaceWith("<div class='alert alert-success'>To download your license(s), please select the target license, then click the download button.</div>");
-                                        //$('.print-noyes').text('YES');
                                         $('#valid-status-' + license.license_id).find('span').text('YES').attr('class', 'badge bg-success print-noyes');
                                     } else {
                                         $('.progress-'+license.license_id).replaceWith("<div class='alert alert-danger progress-"+license.license_id+"'>"+license.message+"<a href='javascript:void(0)' onclick='licenseBindReGenerate(\`"+license.license_id+"\`,\`"+license.server_id+"\`);' class='btn btn-success waves-effect waves-light ml-5'>License Bind Again</a></div>");
@@ -334,7 +331,7 @@ export default function Index(props) {
 
             <div className="table-responsive">
 
-                <TabelSearchBox s={props.s} o={props.o} ob={props.ob} route='licenses' />
+                <TabelSearchBox s={props.s} o={props.o} ob={props.ob} user_id={props.user_id} route='licenses' />
 
                 <table className="table">
                     <thead className="table-light">
@@ -349,17 +346,17 @@ export default function Index(props) {
                                 </a>
                             </th>
                             <th className="px-2 py-2">
-                                {Common.makeSortOrderLink('ID','licenses','id',props.s,props.o,props.ob)}
+                                {Common.makeSortOrderLink('ID','licenses','id',props.s,props.o,props.ob,props.user_id)}
                             </th>
-                            <th className="px-2 py-2">{Common.makeSortOrderLink('Username','licenses','username',props.s,props.o,props.ob)}</th>
-                            <th className="px-2 py-2">{Common.makeSortOrderLink('Package Name','licenses','plan_name',props.s,props.o,props.ob)}</th>
-                            <th className="px-2 py-2">{Common.makeSortOrderLink('Server Qty.','licenses','device_count',props.s,props.o,props.ob)}</th>
-                            <th className="px-2 py-2">{Common.makeSortOrderLink('Client Qty.','licenses','device_count',props.s,props.o,props.ob)}</th>
-                            <th className="px-2 py-2">{Common.makeSortOrderLink('Server ID','licenses','server_id',props.s,props.o,props.ob)}</th>
-                            <th className="px-2 py-2">{Common.makeSortOrderLink('Added','licenses','added_date',props.s,props.o,props.ob)}</th>
-                            <th className="px-2 py-2">{Common.makeSortOrderLink('Issue','licenses','buy_date',props.s,props.o,props.ob)}</th>
-                            <th className="px-2 py-2">{Common.makeSortOrderLink('Expiration','licenses','expiration_date',props.s,props.o,props.ob)}</th>
-                            <th className="px-2 py-2">{Common.makeSortOrderLink('Valid','licenses','expiration_date',props.s,props.o,props.ob)}</th>
+                            <th className="px-2 py-2">{Common.makeSortOrderLink('Username','licenses','username',props.s,props.o,props.ob,props.user_id)}</th>
+                            <th className="px-2 py-2">{Common.makeSortOrderLink('Package Name','licenses','plan_name',props.s,props.o,props.ob,props.user_id)}</th>
+                            <th className="px-2 py-2">{Common.makeSortOrderLink('Server Qty.','licenses','device_count',props.s,props.o,props.ob,props.user_id)}</th>
+                            <th className="px-2 py-2">{Common.makeSortOrderLink('Client Qty.','licenses','device_count',props.s,props.o,props.ob,props.user_id)}</th>
+                            <th className="px-2 py-2">{Common.makeSortOrderLink('Server ID','licenses','server_id',props.s,props.o,props.ob,props.user_id)}</th>
+                            <th className="px-2 py-2">{Common.makeSortOrderLink('Added','licenses','added_date',props.s,props.o,props.ob,props.user_id)}</th>
+                            <th className="px-2 py-2">{Common.makeSortOrderLink('Issue','licenses','buy_date',props.s,props.o,props.ob,props.user_id)}</th>
+                            <th className="px-2 py-2">{Common.makeSortOrderLink('Expiration','licenses','expiration_date',props.s,props.o,props.ob,props.user_id)}</th>
+                            <th className="px-2 py-2">{Common.makeSortOrderLink('Valid','licenses','expiration_date',props.s,props.o,props.ob,props.user_id)}</th>
                         </tr>
                     </thead>
                     <tbody>

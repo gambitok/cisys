@@ -11,7 +11,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import { Transition } from '@headlessui/react';
 
 export default function Edit(props) {
-    
+
     const passwordInput = useRef();
     const currentPasswordInput = useRef();
 
@@ -40,7 +40,7 @@ export default function Edit(props) {
             },
         });
     };
-    
+
     return (
         <Authenticated
             props={props}
@@ -52,7 +52,7 @@ export default function Edit(props) {
 
             <div className="py-12">
                 <div className="mx-auto sm:px-6 lg:px-8 space-y-6">
-                    
+
                     <div className="p-4 sm:p-8 bg-gray-50 shadow sm:rounded-lg">
                         <UpdateProfileInformationForm
                             mustVerifyEmail={props.mustVerifyEmail}
@@ -61,8 +61,8 @@ export default function Edit(props) {
                         />
                     </div>
 
-                    <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                        {/* <UpdatePasswordForm 
+                    <div className="p-4 sm:p-8 shadow sm:rounded-lg">
+                        {/* <UpdatePasswordForm
                         mustVerifyEmail={props.mustVerifyEmail}
                         status={props.status}
                         className="max-w-xl" /> */}
@@ -143,7 +143,7 @@ export default function Edit(props) {
 
                     </div>
 
-                    <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg" style={{display:"none"}}>
+                    <div className="p-4 sm:p-8 shadow sm:rounded-lg" style={{display:"none"}}>
                         <DeleteUserForm className="max-w-xl" />
                     </div>
                 </div>

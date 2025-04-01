@@ -1,6 +1,6 @@
 import React from 'react';
 import Authenticated from '@/Layouts/Authenticated';
-import { Head, Link } from '@inertiajs/inertia-react';
+import { Link } from '@inertiajs/inertia-react';
 
 export default function Dashboard(props) {
     return (
@@ -15,7 +15,7 @@ export default function Dashboard(props) {
                 {props.datastastics.map((stastic) => (
                     <div className="col-md-3 p-3">
                         <Link href={stastic.link} style={{color:"#000"}}>
-                            <div className="row bg-gray-200 rounded pt-2 pb-2">
+                            <div className="row bg-gray-200 rounded pt-2 pb-2 border">
                                 <div className="col">
                                     <p className='fs-5'>{stastic.name}</p>
                                     <h3 className='fs-2'>{stastic.count}</h3>

@@ -2,24 +2,31 @@ import React from 'react';
 import { Inertia } from "@inertiajs/inertia";
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import moment from 'moment';
-// import { isEmpty } from 'lodash';
 
 const Common = () => {
-    const makeUrlWithSearchAndOrder = (route,search,o,ob,ldap=false) => {
+    const makeUrlWithSearchAndOrder = (route,search,o,ob,user_id,ldap=false) => {
         if (ldap) {
-            return changeUrlWithSearchAndOrder(route+'?s='+search+'&ob='+ob+'&o='+o+'&ldap='+ldap);
-        }else{
-            return changeUrlWithSearchAndOrder(route+'?s='+search+'&ob='+ob+'&o='+o);
+            if (user_id) {
+                return changeUrlWithSearchAndOrder(route+'?s='+search+'&ob='+ob+'&o='+o+'&ldap='+ldap+'&user_id='+user_id);
+            } else {
+                return changeUrlWithSearchAndOrder(route+'?s='+search+'&ob='+ob+'&o='+o+'&ldap='+ldap);
+            }
+        } else {
+            if (user_id) {
+                return changeUrlWithSearchAndOrder(route+'?s='+search+'&ob='+ob+'&o='+o+'&user_id='+user_id);
+            } else {
+                return changeUrlWithSearchAndOrder(route+'?s='+search+'&ob='+ob+'&o='+o);
+            }
         }
     }
     const changeUrlWithSearchAndOrder = (url) => {
         Inertia.visit(url);
     }
-    const makeSortOrderLink = (linktext,route,columnname,search,o,ob,ldap=false) => {
+    const makeSortOrderLink = (linktext,route,columnname,search,o,ob,user_id,ldap=false) => {
         return (
             <Link
                 className=""
-                href={route+'?s='+search+'&ob='+columnname+'&o='+(o == 'DESC'?'ASC':'DESC')+(ldap?'&ldap=true':'')}
+                href={route+'?s='+search+'&ob='+columnname+'&o='+(o == 'DESC'?'ASC':'DESC')+(ldap?'&ldap=true':'')+(user_id?'&user_id='+user_id:'')}
             >
                 {linktext}
             </Link>
@@ -32,12 +39,8 @@ const Common = () => {
             formattedDate = moment(inputDate).format(general_settings.format_date);
 
         }
-
-
-
         return formattedDate;
     }
-
 
     return {
         makeUrlWithSearchAndOrder,
@@ -46,4 +49,5 @@ const Common = () => {
         makeDateFormate
     }
   }
+
   export default Common();

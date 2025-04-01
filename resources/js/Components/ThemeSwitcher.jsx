@@ -17,8 +17,14 @@ const ThemeSwitcher = () => {
     };
 
     return (
-        <button onClick={toggleTheme}>
-            Switch to {theme === 'light' ? 'dark' : 'light'} theme
+        <button
+                className={`btn ${theme === 'light' ? 'btn-primary' : 'btn-secondary'} mr-2 d-flex align-items-center`}
+                onClick={toggleTheme}
+            >
+                <i className={`bi ${theme === 'light' ? 'bi-moon' : 'bi-sun'}`}></i>
+            <span className="d-none d-md-inline ms-2">
+                {theme === 'light' ? 'Dark' : 'Light'} theme
+            </span>
         </button>
     );
 };

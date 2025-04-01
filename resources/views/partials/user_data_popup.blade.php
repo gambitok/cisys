@@ -1,9 +1,9 @@
-<center>
+<div style="text-align: center;">
     <div class="row">
         <div class="col-md-4">
             <div class="popUserInfo">
                 <div class="userTitle">
-                    Usergroup
+                    User group
                 </div>
                 <div class="userValue">
                     {{ $rolename }}
@@ -13,10 +13,30 @@
         <div class="col-md-4">
             <div class="popUserInfo">
                 <div class="userTitle">
-                    Fullname
+                    Full name
                 </div>
                 <div class="userValue">
                     {{ $user->name }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="popUserInfo">
+                <div class="userTitle">
+                    First name
+                </div>
+                <div class="userValue">
+                    {{ $user->firstname }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="popUserInfo">
+                <div class="userTitle">
+                    Last name
+                </div>
+                <div class="userValue">
+                    {{ $user->lastname }}
                 </div>
             </div>
         </div>
@@ -42,13 +62,27 @@
                 </div>
             </div>
         </div>
+        @if(!empty($user->work_email))
+            <div class="col-md-4">
+                <div class="popUserInfo">
+                    <div class="userTitle">
+                        Work Email
+                    </div>
+                    <div class="userValue">
+                        {{ $user->work_email }}
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="col-md-4">
             <div class="popUserInfo">
                 <div class="userTitle">
                     Username
                 </div>
                 <div class="userValue">
-                    {{ $user->username }}
+                    <a href="{{ url('licenses?user_id=' . $user->id) }}">
+                        {{ $user->username }}
+                    </a>
                 </div>
             </div>
         </div>
@@ -63,13 +97,13 @@
             </div>
         </div>
     </div>
-</center>
+</div>
 <style>
     .popUserInfo .userTitle {
         color: #808080;
         text-transform: uppercase;
     }
     .popUserInfo {
-        padding: 30px 0px;
+        padding: 30px 0;
     }
 </style>
