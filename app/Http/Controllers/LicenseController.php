@@ -42,6 +42,7 @@ class LicenseController extends Controller
                     ->orWhere('server_id', 'LIKE', '%' . $s . '%')
                     ->orWhere('buy_date', 'LIKE', '%' . $s . '%')
                     ->orWhere('expiration_date', 'LIKE', '%' . $s . '%')
+                    ->orWhere('created_at', 'LIKE', '%' . $s . '%')
                     ->orWhereHas('user', function($query) use ($s) {
                         $query->where('username', 'LIKE', '%' . $s . '%');
                     });
@@ -51,6 +52,10 @@ class LicenseController extends Controller
         if (isset($request->o)) {
             $ob = $request->ob;
             $o = $request->o;
+        }
+
+        if ($ob == 'added_date') {
+            $ob = 'created_at';
         }
 
         if ($ob == 'username') {

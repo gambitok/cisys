@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RoleHasPermission;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-
-use App\Models\UserType;
-use App\Models\Route;
 use App\Models\Menu;
 use App\Models\Icon;
-use App\Models\RoleHasPermission;
-use Illuminate\Support\Facades\Validator;
 use Arr;
 use Hash;
 use App\Rules\NoSpecialChars;
@@ -23,18 +19,20 @@ class MenuController extends Controller
      *
      * @return Response
      */
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $s = '';
         $o = 'DESC';
         $ob = 'id';
 
-        $menus = Menu::with('icon')->where('parent_id','==',0);
+        $menus = Menu::with('icon')
+            ->where('parent_id','==',0);
 
         if (isset($request->s)) {
             $s = $request->s;
 
-            $menus = $menus->orWhere('name','LIKE','%'.$request->s.'%')->orWhere('sort','LIKE','%'.$request->s.'%');
-
+            $menus = $menus->orWhere('name','LIKE','%'.$request->s.'%')
+                ->orWhere('sort','LIKE','%'.$request->s.'%');
         }
 
         if (isset($request->o)) {
@@ -43,21 +41,21 @@ class MenuController extends Controller
         }
 
         $menus = $menus->orderBy($ob, $o);
-        
+
         $menus = $menus->paginate(env('PAGINATE_NO_OF_ROWS'));
 
         $menus->appends($request->except(['page']));
 
         return Inertia::render('Menus/Index', ['menus' => $menus,'s' => $s,'o' => $o,'ob' => $ob,'firstitem' => $menus->firstItem()]);
     }
-  
+
     /**
      * Write code on Method
      *
      * @return response()
      */
-    public function create(){
-        
+    public function create()
+    {
         $icons_get = Icon::all();
         $icons = [];
         foreach ($icons_get as $value) {
@@ -66,34 +64,37 @@ class MenuController extends Controller
                 'label' => $value->icon,
             ];
         }
-        
-        return Inertia::render('Menus/Create',compact('icons'));
+
+        return Inertia::render('Menus/Create', compact('icons'));
     }
-    
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function store(Request $request){
-        
+
+    public function store(Request $request)
+    {
         $this->settingValidation($request);
 
         $data = $request->all();
         $data['route_id'] = 0;
         $data['parent_id'] = 0;
-        Menu::create($data);
-        
+
+        $menu = Menu::create($data);
+
+        RoleHasPermission::create([
+            'role_id' => 1,
+            'menu_id' => $menu->id,
+            'permission' => 2,
+            'menu_parent_id' => $menu->parent_id,
+        ]);
+
         return redirect()->route('menus.index')->with('success', 'Data inserted successfully!');
     }
-  
+
     /**
      * Write code on Method
      *
      * @return response()
      */
-    public function edit(Menu $menu){
-
+    public function edit(Menu $menu)
+    {
         $icons_get = Icon::all();
         $icons = [];
         foreach ($icons_get as $value) {
@@ -111,36 +112,34 @@ class MenuController extends Controller
             'icons'         => $icons,
         ]);
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
      * @return Response
      */
-    public function update(Request $request, Menu $menu){
-        
+    public function update(Request $request, Menu $menu)
+    {
         $this->settingValidation($request);
-        
+
         $menu->update($request->all());
 
         return redirect()->route('menus.index')->with('success', 'Data updated successfully!');
     }
-    
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function destroy(Menu $menu){
 
-        Menu::where('parent_id',$menu->id)->delete();
-        
+    public function destroy(Menu $menu)
+    {
+        Menu::where('parent_id', $menu->id)->delete();
+
+        RoleHasPermission::where('menu_id', $menu->id)->delete();
+
         $menu->delete();
-        
+
         return redirect()->route('menus.index')->with('success', 'Data deleted successfully!');
     }
 
-    public function settingValidation($request){
+    public function settingValidation($request)
+    {
         $this->validate($request, [
             'icon_id'       => 'required',
             'name'          => 'required',
@@ -148,4 +147,5 @@ class MenuController extends Controller
             '*'             => new NoSpecialChars,
         ]);
     }
+
 }

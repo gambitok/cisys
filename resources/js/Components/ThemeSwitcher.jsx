@@ -18,7 +18,7 @@ const ThemeSwitcher = () => {
 
     return (
         <button
-                className={`btn ${theme === 'light' ? 'btn-primary' : 'btn-secondary'} mr-2 d-flex align-items-center`}
+                className={`btn ${theme === 'light' ? 'btn-primary' : 'btn-secondary'} btn-sm mr-2 d-md-flex align-items-center`}
                 onClick={toggleTheme}
             >
                 <i className={`bi ${theme === 'light' ? 'bi-moon' : 'bi-sun'}`}></i>

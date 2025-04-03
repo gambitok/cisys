@@ -26,9 +26,19 @@ input[type='file'] {
     background-color: #ffffff;
     color: #000000;
 }
-[data-theme='dark'], [data-theme="dark"] div, [data-theme="dark"] td, [data-theme="dark"] .sidebar a {
+[data-theme="dark"] .navbar, [data-theme="dark"] .navbar-collapse,  [data-theme="dark"] .navbar-collapse div:not(.fixed) {
+    background-color: #252932;
+}
+[data-theme='dark'] #navbarText {
+    background-color: #252932!important;
+}
+[data-theme='dark'], [data-theme="dark"] div:not(.fixed), [data-theme="dark"] td, [data-theme="dark"] .sidebar a {
     background-color: #1C1F26;
     color: #ffffff;
+}
+[data-theme='dark'] .bg-white {
+    background-color: #1C1F26!important;
+    color: #ffffff!important;
 }
 [data-theme="dark"] .sidebar a:hover, [data-theme="dark"] table a, [data-theme="dark"] .custom-nav-title {
     color: #6e66db;
@@ -50,9 +60,6 @@ input[type='file'] {
     border-bottom-color: #2f3541;
     color: #fff;
 }
-[data-theme="dark"] .navbar, [data-theme="dark"] .navbar-collapse {
-    background-color: #252932;
-}
 [data-theme="dark"] .pagination a {
     background-color: #2f3541;
     color: #ffffff;
@@ -61,9 +68,9 @@ input[type='file'] {
     border-color: #6e66db;
     color: #ffffff;
 }
-[data-theme="dark"] .fixed {
-    background: transparent;
-}
+/*[data-theme="dark"] .fixed {*/
+/*    background: transparent;*/
+/*}*/
 [data-theme="dark"] h2 {
     color: #6e66db;
 }
@@ -72,6 +79,7 @@ input[type='file'] {
     color: #6e66db;
 }
 [data-theme="dark"] select,[data-theme="dark"] select:hover, [data-theme="dark"] select:focus,
+[data-theme="dark"] input[type='email'],
 [data-theme="dark"] input[type='text'],
 [data-theme="dark"] input[type='number'],
 [data-theme="dark"] input[type='password'],
@@ -82,6 +90,15 @@ input[type='file'] {
     border-color: #272B35 !important;
     color: #ccc;
     background: #252932;
+}
+[data-theme="dark"] input[type="text"]:read-only,
+[data-theme="dark"] input[type='email']:read-only,
+[data-theme="dark"] input[type='number']:read-only,
+[data-theme="dark"] input[type='password']:read-only,
+[data-theme="dark"] input[type='readonly']:read-only,
+[data-theme="dark"] input[type='file']:read-only,
+[data-theme="dark"] input[type='color']:read-only {
+    color: #000;
 }
 [data-theme="dark"] input[type='text']::placeholder, [data-theme="dark"] input[type='number']::placeholder , [data-theme="dark"] input[type='password']::placeholder , [data-theme="dark"] input[type='readonly']::placeholder, [data-theme="dark"] textarea::placeholder {
     color: #ccc;
@@ -402,23 +419,39 @@ input[type=checkbox][disabled]{
 }
 @media (max-width: 768px) {
     .nav-tabs-custom {
-        flex-wrap: wrap; /* Переносимо елементи */
+        flex-wrap: wrap;
     }
 
     .form-select {
-        width: 100%; /* Робимо <select> на всю ширину */
+        width: 100%;
         margin-bottom: 5px;
     }
 
     .nav-controls {
         display: flex;
         justify-content: center;
-        gap: 10px; /* Відстань між кнопками */
+        gap: 10px;
         width: 100%;
     }
 
     .nav-controls .nav-link {
-        width: auto; /* Нормальний розмір для кнопок */
+        width: auto;
+    }
+
+    .navbar-text {
+        width: 100%;
+    }
+
+    .container-fluid {
+        padding: 0 5px;
+    }
+
+    .container-fluid .py-3 {
+        padding: 0!important;
+    }
+
+    .create-button-listing {
+        margin-bottom: 15px;
     }
 }
 

@@ -6,12 +6,15 @@ import { Link, useForm, usePage } from '@inertiajs/inertia-react';
 import { Transition } from '@headlessui/react';
 
 export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' }) {
+    const { flash } = usePage().props;
     const user = usePage().props.auth.user;
-    console.log(user);
+
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
         id: user.id,
         api_key: user.api_key,
         name: user.name,
+        firstname: user.firstname,
+        lastname: user.lastname,
         email: user.email,
         work_email: user.work_email,
         username: user.username,
@@ -25,17 +28,18 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
 
     function checkRequestPeddingVeryfiy(type,email_track) {
         var email_track = JSON.parse(email_track);
-        
+
         if (email_track != null && type in email_track){
             if ((Date.now() /1000 |0) > email_track[type].before_verify) {
                 return 'This request change email has been expired '+email_track[type].email+'!';
-            }else{
+            } else {
                 return 'Can you check email '+email_track[type].email+' verify after change in profile this mail is valid only 24 hours!';
             }
-        }else{
+        } else {
             return '';
         }
     }
+
     function copyGenreateKey(){
         var $temp = $("<input>");
         $("body").append($temp);
@@ -58,6 +62,12 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
 
             <form onSubmit={submit} className="mt-6 space-y-6">
 
+                <div className="flex items-center">
+                    {flash?.status && (
+                        <p className="text-sm text-green-600">{flash.status}</p>
+                    )}
+                </div>
+
                 <div>
                     <InputLabel htmlFor="username" value="Username" />
 
@@ -69,7 +79,6 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                         readOnly={true}
                         style={{backgroundColor: "#dcdcdc"}}
                     />
-                    
                 </div>
 
                 <div>
@@ -86,6 +95,38 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                     />
 
                     <InputError className="mt-2" message={errors.name} />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="firstname" value="Firstname" />
+
+                    <TextInput
+                        id="firstname"
+                        className="mt-1 block w-full"
+                        value={data.firstname}
+                        onChange={(e) => setData('firstname', e.target.value)}
+                        required
+                        isFocused
+                        autoComplete="firstname"
+                    />
+
+                    <InputError className="mt-2" message={errors.firstname} />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="lastname" value="Lastname" />
+
+                    <TextInput
+                        id="lastname"
+                        className="mt-1 block w-full"
+                        value={data.lastname}
+                        onChange={(e) => setData('lastname', e.target.value)}
+                        required
+                        isFocused
+                        autoComplete="lastname"
+                    />
+
+                    <InputError className="mt-2" message={errors.lastname} />
                 </div>
 
                 <div>
@@ -115,11 +156,9 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                         value={data.work_email}
                         onChange={(e) => setData('work_email', e.target.value)}
                         required
-                        autoComplete="username"
                     />
-                    
+
                     <InputError className="mt-2" message={errors.work_email} />
-                    {checkRequestPeddingVeryfiy('work_email',user.email_track)}
                 </div>
 
                 {mustVerifyEmail && user.email_verified_at === null && (
@@ -144,7 +183,6 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                     </div>
                 )}
 
-
                 {data.id > 0 &&
                     (
                         <div className="mb-3">
@@ -166,12 +204,10 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                                 <i className='bi bi-clipboard2-pulse fs-6'></i> Copy PAT
                             </div>
                             <div className='alert alert-light' id='genreate-key-success' style={{display:"none"}}></div>
-                            
+
                         </div>
                     )
                 }
-
-
 
                 <div className="flex items-center gap-4">
                     <PrimaryButton disabled={processing}>Save</PrimaryButton>

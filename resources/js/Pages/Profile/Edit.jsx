@@ -1,7 +1,6 @@
 import React,{ useRef } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
 import DeleteUserForm from './Partials/DeleteUserForm';
-import UpdatePasswordForm from './Partials/UpdatePasswordForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
 import { Head, usePage, Link, useForm } from '@inertiajs/inertia-react';
 import InputError from '@/Components/InputError';
@@ -66,7 +65,6 @@ export default function Edit(props) {
                         mustVerifyEmail={props.mustVerifyEmail}
                         status={props.status}
                         className="max-w-xl" /> */}
-
 
                         <section className="max-w-xl">
                             <header>

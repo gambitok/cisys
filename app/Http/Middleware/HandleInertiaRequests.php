@@ -57,7 +57,7 @@ class HandleInertiaRequests extends Middleware
         if ($format_date) {
             $format_date = $format_date->value;
         }else{
-            $format_date = 'D/M/Y';    
+            $format_date = 'D/M/Y';
         }
 
         $rolename = '';
@@ -76,6 +76,7 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error'),
+                'status' => $request->session()->get('status'),
             ],
             'general_settings' => [
                 'logo' => $site_logo,
