@@ -9,6 +9,7 @@ use Inertia\Response;
 use App\Rules\NoSpecialChars;
 use App\Models\Setting;
 use App\Models\SettingScreen;
+use App\Models\SettingAlarm;
 use App\Models\GeneralSetting;
 use App\Models\User;
 use Arr;
@@ -132,6 +133,12 @@ class SettingController extends Controller
                 'right_text' => $data['right_text_' . $i],
                 'text_color' => $data['text_color_' . $i],
                 'info_checks' => json_encode($data['info_checks_' . $i]),
+            ]);
+        }
+
+        for ($i = 1; $i <= $data['alarm']; $i++) {
+            SettingAlarm::create([
+                'setting_id' => $setting->id,
                 'alarm_code' => $data['alarm_code_'.$i],
                 'alarm_message' => $data['alarm_message_'.$i],
                 'alarm_height' => $data['alarm_height_' . $i],
@@ -159,6 +166,7 @@ class SettingController extends Controller
         $data['id'] = $setting->id;
         $data['name'] = $setting->name;
         $data['remark'] = $setting->remark;
+
         $data['screen'] = 0;
         $data['screenselect'] = 0;
 
@@ -175,6 +183,22 @@ class SettingController extends Controller
             $data['banner_color_'.$row] = $value->banner_color;
             $data['text_color_'.$row] = $value->text_color;
             $data['info_checks_'.$row] = json_decode($value->info_checks,true);
+            $data['screen']++;
+            $data['screenselect']++;
+        }
+
+        if ($data['screen'] == 0) {
+            $data['screen'] = 1;
+            $data['screenselect'] = 1;
+        }
+
+        $data['alarm'] = 0;
+        $data['alarmselect'] = 0;
+
+        foreach ($setting->alarms()->orderby('id')->get() as $key => $value) {
+
+            $row = $key + 1;
+
             $data['alarm_code_'.$row] = $value->alarm_code;
             $data['alarm_message_'.$row] = $value->alarm_message;
             $data['alarm_height_'.$row] = $value->alarm_height;
@@ -185,13 +209,13 @@ class SettingController extends Controller
             $data['alarm_text_color_'.$row] = $value->alarm_text_color;
             $data['alarm_text_size_'.$row] = $value->alarm_text_size;
             $data['alarm_heartbeat_'.$row] = $value->alarm_heartbeat;
-            $data['screen']++;
-            $data['screenselect']++;
+            $data['alarm']++;
+            $data['alarmselect']++;
         }
 
-        if ($data['screen'] == 0) {
-            $data['screen'] = 1;
-            $data['screenselect'] = 1;
+        if ($data['alarm'] == 0) {
+            $data['alarm'] = 1;
+            $data['alarmselect'] = 1;
         }
 
         return Inertia::render('Settings/Edit', [
@@ -215,10 +239,9 @@ class SettingController extends Controller
             'remark' => $data['remark'],
         ]);
 
-        SettingScreen::where('setting_id',$setting->id)->delete();
+        SettingScreen::where('setting_id', $setting->id)->delete();
 
         for ($i=1; $i <= $data['screen']; $i++) {
-
             SettingScreen::create([
                 'setting_id' => $setting->id,
                 'banner_height' => $data['banner_height_'.$i],
@@ -230,6 +253,14 @@ class SettingController extends Controller
                 'right_text' => $data['right_text_'.$i],
                 'text_color' => $data['text_color_'.$i],
                 'info_checks' => json_encode($data['info_checks_'.$i]),
+            ]);
+        }
+
+        SettingAlarm::where('setting_id', $setting->id)->delete();
+
+        for ($i=1; $i <= $data['alarm']; $i++) {
+            SettingAlarm::create([
+                'setting_id' => $setting->id,
                 'alarm_code' => $data['alarm_code_'.$i],
                 'alarm_message' => $data['alarm_message_'.$i],
                 'alarm_height' => $data['alarm_height_'.$i],
@@ -267,18 +298,14 @@ class SettingController extends Controller
             $validationarray['text_size_'.$i] = 'required|numeric|between:0,99';
             $validationarray['banner_height_'.$i] = 'required|numeric|between:0,999';
             $validationarray['banner_border_'.$i] = 'required|numeric|between:0,99';
-//            $validationarray['alarm_heartbeat_'.$i] = 'required|numeric|between:0,999';
-//            $validationarray['alarm_text_size_'.$i] = 'required|numeric|between:0,99';
-//            $validationarray['alarm_height_'.$i] = 'required|numeric|between:0,999';
-//            $validationarray['alarm_border_'.$i] = 'required|numeric|between:0,99';
         }
         $validationarray['*'] = new NoSpecialChars;
+
         $this->validate($request, $validationarray);
     }
 
     public function generalSetting()
     {
-
         $formates = [[
             'value' => 'D-MMM-Y',
             'label' => date('d-M-Y'),

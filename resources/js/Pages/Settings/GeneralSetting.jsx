@@ -48,15 +48,9 @@ export default function Create(props) {
         setData("paypal_env",value.value);
     };
 
-    // const typevalstripe = props.stripe_env.find(obj => {
-    //     return obj.value === data.stripe_env;
-    // });
     const typeval = props.formates.find(obj => {
         return obj.value === data.format_date;
     });
-    // const typevalpaypal = props.paypal_env.find(obj => {
-    //     return obj.value === data.paypal_env;
-    // });
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -278,14 +272,6 @@ export default function Create(props) {
                             <div className='col-md-6'>
                                 <div className="mb-6">
                                     <InputLabel value="Environment" />
-                                    {/* <Select
-                                        className="basic-single"
-                                        classNamePrefix="select"
-                                        defaultValue={typevalstripe}
-                                        name="stripe_env"
-                                        options={props.stripe_env}
-                                        onChange={optionChangedstripe}
-                                        /> */}
                                         <Toggle
                                         onClick={onTogglestr}
                                         on={<span>Test</span>}
@@ -389,15 +375,6 @@ export default function Create(props) {
                             <div className='col-md-6'>
                                 <div className="mb-6">
                                     <InputLabel value="Environment" />
-                                    {/* <Select
-                                        className="basic-single"
-                                        classNamePrefix="select"
-                                        defaultValue={typevalpaypal}
-                                        name="paypal_env"
-                                        options={props.paypal_env}
-                                        onChange={optionChangedpaypal}
-                                        /> */}
-
                                     <Toggle
                                         onClick={onTogglepayenv}
                                         on={<span>Test</span>}
@@ -435,8 +412,8 @@ export default function Create(props) {
                                         id="test_secretkey_paypal"
                                         value={data.test_secretkey_paypal}
                                         onChange={(e) => setData('test_secretkey_paypal', e.target.value)}
-                                        type="text"                                                 name="test_secretkey_paypal"
-
+                                        type="text"
+                                        name="test_secretkey_paypal"
                                         className="mt-1 block w-full form-control"
                                         autoComplete="false"
                                         placeholder="Test Secret Key"
@@ -488,7 +465,6 @@ export default function Create(props) {
                                     <InputLabel htmlFor="header_script" value="Header" />
                                     <textarea class="form-control" id="header_script" rows="20" onChange={(e) => setData('header_script', e.target.value)}>{data.header_script}</textarea>
                                     <InputError message={errors.header_script} className="mt-2" />
-
                                 </div>
                             </div>
                         </div>
@@ -499,7 +475,6 @@ export default function Create(props) {
                                     <InputLabel htmlFor="footer_script" value="Footer" />
                                     <textarea class="form-control" id="footer_script" rows="20" onChange={(e) => setData('footer_script', e.target.value)}>{data.footer_script}</textarea>
                                     <InputError message={errors.footer_script} className="mt-2" />
-
                                 </div>
                             </div>
                         </div>

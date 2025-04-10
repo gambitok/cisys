@@ -130,14 +130,6 @@ export default function Index(props) {
                             <th className="px-2 py-2">
                                 {Common.makeSortOrderLink('Hearbeat (seconds)','settings','hearbeat',props.s,props.o,props.ob)}
                             </th>
-                            {/*<th className="px-2 py-2">Alarm Height (px)</th>*/}
-                            {/*<th className="px-2 py-2">Alarm Border (px)</th>*/}
-                            {/*<th className="px-2 py-2">Alarm Center Text</th>*/}
-                            {/*<th className="px-2 py-2">Alarm Right Text</th>*/}
-                            {/*<th className="px-2 py-2">Alarm Color</th>*/}
-                            {/*<th className="px-2 py-2">Alarm Text Color</th>*/}
-                            {/*<th className="px-2 py-2">Alarm Text Size (pt)</th>*/}
-                            {/*<th className="px-2 py-2">Alarm Heartbeat (seconds)</th>*/}
                             <th className="px-2 py-2">
                                 {Common.makeSortOrderLink('Remark','settings','remark',props.s,props.o,props.ob)}
                             </th>
@@ -167,15 +159,6 @@ export default function Index(props) {
                                 <td className="border px-2 py-2"><input type='color' value={ setting?.screen_first?.text_color } readOnly /></td>
                                 <td className="border px-2 py-2">{ setting?.screen_first?.alarm_text_size }</td>
                                 <td className="border px-2 py-2">{ setting?.screen_first?.hearbeat }</td>
-
-                                {/*<td className="border px-2 py-2">{ setting?.screen_first?.alarm_height }</td>*/}
-                                {/*<td className="border px-2 py-2">{ setting?.screen_first?.alarm_border }</td>*/}
-                                {/*<td className="border px-2 py-2">{ setting?.screen_first?.alarm_center_text }</td>*/}
-                                {/*<td className="border px-2 py-2">{ setting?.screen_first?.alarm_right_text }</td>*/}
-                                {/*<td className="border px-2 py-2"><input type='color' value={ setting?.screen_first?.alarm_color } readOnly /></td>*/}
-                                {/*<td className="border px-2 py-2"><input type='color' value={ setting?.screen_first?.alarm_text_color } readOnly /></td>*/}
-                                {/*<td className="border px-2 py-2">{ setting?.screen_first?.alarm_text_size }</td>*/}
-                                {/*<td className="border px-2 py-2">{ setting?.screen_first?.alarm_heartbeat }</td>*/}
 
                                 <td className="border px-2 py-2">{ setting.remark }</td>
                                 {

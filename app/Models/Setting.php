@@ -35,4 +35,14 @@ class Setting extends Model
         return $this->hasOne(SettingScreen::class)->oldestOfMany();
     }
 
+    public function alarms()
+    {
+        return $this->hasMany(SettingAlarm::class);
+    }
+
+    public function alarmFirst()
+    {
+        return $this->hasOne(SettingAlarm::class)->oldestOfMany();
+    }
+
 }

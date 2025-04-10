@@ -9,7 +9,9 @@ export default function Create(props) {
         "name": "",
         "remark": "",
         "screen": 1,
+        "alarm": 1,
         "screenselect": 1,
+        "alarmselect": 1,
         "selectedUser": "",
     });
 
@@ -31,7 +33,7 @@ export default function Create(props) {
 
             <form name="createForm" onSubmit={handleSubmit}>
 
-                <Form data={data} errors={errors} setData={setData} permissions={props.permissions} users={props.users} role_id={props.role_id} />
+                <Form data={data} errors={errors} setData={setData} users={props.users} role_id={props.role_id} />
 
             </form>
 
