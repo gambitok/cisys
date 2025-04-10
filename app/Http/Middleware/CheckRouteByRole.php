@@ -17,28 +17,28 @@ class CheckRouteByRole
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response{
-        
+
         $rc_role_id = Auth::user()->role_id;
 
         $rc_route = $request->route()->getName();
         $rc_temp = explode('.',$rc_route);
 
-       
+
         if (isset($rc_temp[1]) && ($rc_temp[1] == 'index' || $rc_temp[1] == 'create' || $rc_temp[1] == 'edit' || $rc_temp[1] == 'destroy')) {
 
             // $permission = Permission::join('role_has_permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')->where('route',$rc_route)->where('role_has_permissions.role_id',$rc_role_id)->first();
             $permission = false;
-            
+
             $routedb = Route::where('name',$rc_temp[0])->first();
-            
+
             if ($routedb) {
-                
+
                 $getpermission = RoleHasPermission::with('menu');
                 $getpermission = $getpermission->orWhereHas('menu', function($query) {
                     return $query->where('route_id','=',1);
                 });
                 $getpermission = $getpermission->where('role_id',$rc_role_id)->first();
-                
+
                 if ($getpermission) {
                     if ($getpermission->permission == 2) {
                         $permission = true;
@@ -52,7 +52,7 @@ class CheckRouteByRole
             if ($permission) {
                 return $next($request);
             }else{
-                return redirect()->to('/dashboard');
+                return redirect()->to('/home');
             }
         }
 

@@ -136,7 +136,8 @@ class DashboardController extends Controller
             ];
         }
 
-        return Inertia::render('Dashboard', ['datastastics' => $dataStastics]);
+//        return Inertia::render('Dashboard', ['datastastics' => $dataStastics]);
+        return $dataStastics;
     }
 
 }

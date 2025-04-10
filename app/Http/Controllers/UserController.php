@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Plan;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\User;
@@ -45,6 +46,10 @@ class UserController extends Controller
 
         $users = $usersQuery->orderBy($ob, $o)->paginate(env('PAGINATE_NO_OF_ROWS'));
         $users->appends($request->except(['page']));
+
+        if (empty($s)) {
+            $s = '';
+        }
 
         return Inertia::render('Users/Index', [
             'users' => $users,

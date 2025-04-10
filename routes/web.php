@@ -50,7 +50,8 @@ Route::get('/verify-email-edit/{token}', [UserController::class, 'verifyEmail'])
 /* Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard'); */
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+
+//Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/auth/google', [GoogleController::class, 'googlepage'])->name('authlogin');
 Route::get('/auth/google/callback', [GoogleController::class, 'googlecallback']);
@@ -63,7 +64,12 @@ Route::middleware('auth', 'verified')->group(function () {
         }else{
             $rolename = '-';
         }
-        return Inertia::render('Home',['rolename'=>$rolename]);
+        // Викликаємо метод контролера, щоб отримати дані для Dashboard
+        $dashboardData = app(DashboardController::class)->index(request());
+        return Inertia::render('Home', [
+            'rolename' => $rolename,
+            'dashboardData' => $dashboardData,
+        ]);
     })->name('home');
 
     Route::middleware('role')->group(function () {

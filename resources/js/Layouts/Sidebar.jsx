@@ -89,12 +89,6 @@ export default function Sidebar({company_name,logo}) {
                     <span className='fs-6'>Home</span>
                 </NavLink>
 
-                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                    <i className="bi bi-clipboard2-pulse fs-6 me-3"></i>
-                    <span className='fs-6'>Dashboard</span>
-                </NavLink>
-
-
                 {RoleManageArray.menus.map((menu) => (
                     <>
 

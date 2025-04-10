@@ -16,7 +16,7 @@ class GoogleController extends Controller
 
    public function googlepage()
    {
-    
+
         return Socialite::driver('google')->stateless()->setScopes(['openid', 'email'])->redirect();
 
    }
@@ -31,7 +31,7 @@ class GoogleController extends Controller
                 $finduser->save();
 
                 Auth::login($finduser);
-                return redirect()->intended('/dashboard');
+                return redirect()->intended('/home');
             }else{
                 $newUser = User::where('email', $user->email)->onlyTrashed()->first();
                 if ($newUser) {
@@ -51,7 +51,7 @@ class GoogleController extends Controller
                     ]);
                 }
 
-                
+
 
                 /* $newUser = User::create([
                     'name' => $user->name?$user->name:strtok($user->email , '@'),
@@ -61,14 +61,14 @@ class GoogleController extends Controller
                     'password' => encrypt(strtok($user->email , '@').'123456')
                 ]); */
                 Auth::login ($newUser);
-                return redirect()->intended('/dashboard');
+                return redirect()->intended('/home');
             }
 
 
 
-            
+
         } catch (Exception $e) {
             dd ($e->getMessage());
         }
     }
-}   
+}

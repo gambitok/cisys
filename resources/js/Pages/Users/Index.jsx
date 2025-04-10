@@ -110,25 +110,25 @@ export default function Index(props) {
                                     </a>
                                 </th>
                                 <th className="px-2 py-2 w-10">
-                                    {Common.makeSortOrderLink('ID','users','id',props.s,props.o,props.ob)}
+                                    {Common.makeSortOrderLink('ID','users','id',props.s,props.o,props.ob,props.user_id)}
                                 </th>
                                 <th className="px-2 py-2">
-                                    {Common.makeSortOrderLink('Username','users','username',props.s,props.o,props.ob)}
+                                    {Common.makeSortOrderLink('Username','users','username',props.s,props.o,props.ob,props.user_id)}
                                 </th>
                                 <th className="px-2 py-2">
                                     User Group
                                 </th>
                                 <th className="px-2 py-2">
-                                    {Common.makeSortOrderLink('Full Name','users','name',props.s,props.o,props.ob)}
+                                    {Common.makeSortOrderLink('Full Name','users','name',props.s,props.o,props.ob,props.user_id)}
                                 </th>
                                 <th className="px-2 py-2">
-                                    {Common.makeSortOrderLink('Title','users','title',props.s,props.o,props.ob)}
+                                    {Common.makeSortOrderLink('Title','users','title',props.s,props.o,props.ob,props.user_id)}
                                 </th>
                                 <th className="px-2 py-2">
-                                    {Common.makeSortOrderLink('Email','users','email',props.s,props.o,props.ob)}
+                                    {Common.makeSortOrderLink('Email','users','email',props.s,props.o,props.ob,props.user_id)}
                                 </th>
                                 <th className="px-2 py-2">
-                                    {Common.makeSortOrderLink('Active','users','status',props.s,props.o,props.ob)}
+                                    {Common.makeSortOrderLink('Active','users','status',props.s,props.o,props.ob,props.user_id)}
                                 </th>
                                 <th className="px-2 py-2">
                                     Date
@@ -173,7 +173,7 @@ export default function Index(props) {
                                 <tr>
                                     <td
                                         className="px-6 py-4 border-t"
-                                        colSpan="7"
+                                        colSpan="10"
                                         style={{textAlign:"center"}}
                                     >
                                         No results.
